@@ -1,0 +1,6 @@
+---
+# Additional hosts to add to SSH port security group Allow
+ssh_whitelist: []
+# Example:
+# ssh_whitelist:
+#   - 1.2.3.4/32  

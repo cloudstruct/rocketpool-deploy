@@ -1,0 +1,57 @@
+---
+region: 'us-east-1'
+
+cloudwatch:
+  core:
+    cpu:
+      alarm_name: cpu-utilization-high
+      alarm_description: "CPU Utilization is over 85% for 6 minutes on core node."
+      comparison_operator: "GreaterThanOrEqualToThreshold"
+      evaluation_periods: "3"
+      threshold: "85"
+      period: "120"
+      namespace: "AWS/EC2"
+      metric_name: "CPUUtilization"
+      statistic: "Average"
+
+    instance:
+      alarm_name: instance-termination
+      alarm_description: "An instance in the rocketpool ASG is terminating"
+      comparison_operator: "GreaterThanOrEqualToThreshold"
+      evaluation_periods: "1"
+      threshold: "1"
+      period: "120"
+      namespace: "AWS/AutoScaling"
+      metric_name: "GreaterThanOrEqualToThreshold"
+      statistic: "Average"
+
+    service:
+      alarm_name: in-service-instances
+      alarm_description: "Rocketpool ASG has less than 1 instances in service."
+      comparison_operator: "LessThanOrEqualToThreshold"
+      evaluation_periods: "1"
+      metric_name: "GroupInServiceInstances"
+      namespace: "AWS/AutoScaling"
+      period: "120"
+      statistic: "Average"
+      threshold: "0"
+
+ec2:
+  core:
+    instance_type: r5a.large
+    allow_workstation_ip: true
+
+vpc:
+  cidr: '10.0.0.0/16'
+  az: 'us-east-1c'
+  private_subnet: '10.0.1.0/24'
+  public_subnet: '10.0.101.0/24'
+
+s3: {}
+
+sns:
+#  Uncomment the below to enable slack alerting via AWS Lamba and SNS
+#  slack:
+#    topic_name: slack-rocketpool-alert
+#    channel: monitoring
+#    webhook: ""

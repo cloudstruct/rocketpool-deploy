@@ -1,0 +1,18 @@
+---
+global:
+  ssh:
+    # Dynamically add or replace the IP of the machine executing terraform
+    # to the hosts security group SSH ALLOW list
+    allow_workstation_ip: true
+    port: 22
+  pool: mainnet-00
+
+nodes:
+  core0:
+    type: "core"
+    eip: true
+    # ebs_volume_size: 1000    # Optiona: defaults to 1000G
+    # couldwatch: true         # Optional: defaults to True
+    # eth_network: "mainnet"   # Optional: defaults to mainnet
+    # keypair: my-key-pair     # Specify existing AWS SSH Keypair 
+    # extra_secgroups: []      # Additional security list IDs applied to this node
