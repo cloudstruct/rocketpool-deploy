@@ -27,26 +27,22 @@ jobs:
           - mainnet-00
     steps:
       - uses: actions/checkout@v2
-
+      - uses: terraform-compliance/github_action@main
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@latest
+        uses: terraform-linters/setup-tflint@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.0.7
-
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.CICD_AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.CICD_AWS_SECRET_KEY }}
           aws-region: us-east-1
-
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-
       - uses: actions/cache@v2
         name: Cache dir
         with:
@@ -62,25 +58,33 @@ jobs:
         id: validate
         working-directory: terraform
         run: |
-            terraform workspace select ${{ matrix.env }}
+            terraform workspace select ${{ matrix.pool }}
             terraform validate
 
-      - uses: terraform-linters/setup-tflint@v1
-        name: Setup TFLint
-
-      - name: Init TFLint
+      - name: Execute TFLint
         id: tflint
         run: |
           tflint --version
-          tflint --init
+          tflint --init -c ../.tflint.hcl
           tflint -c ../.tflint.hcl .
 
-      - name: Terraform Plan ${{ matrix.env }}
+      - name: Terraform Plan ${{ matrix.pool }}
         id: plan
         run: |
             terraform workspace list
-            if terraform workspace list | sed 's/\*/ /g' | grep -q ${{ matrix.env }}; then
-              terraform workspace select ${{ matrix.env }}
+            if terraform workspace list | sed 's/\*/ /g' | grep -q ${{ matrix.pool }}; then
+              terraform workspace select ${{ matrix.pool }}
               terraform init
-              terraform plan -lock-timeout=600s
+              terraform plan -lock-timeout=600s -out=${{ matrix.pool }}.plan
+              terraform show -json ${{ matrix.pool }}.plan > ${{ matrix.pool }}.plan.json
             fi
+
+      - name: terraform-compliance-remote
+        id: terraform-compliance-user-friendly-features
+        run: |
+          terraform-compliance -p ${{ matrix.pool }}.plan.json -f git:https://github.com/terraform-compliance/user-friendly-features.git
+
+      - name: terraform-compliance-local
+        id: terraform-compliance-local
+        run: |
+          terraform-compliance -p ${{ matrix.pool }}.plan.json -f ../.github/terraform-compliance

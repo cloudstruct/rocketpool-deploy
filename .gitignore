@@ -1,3 +1,5 @@
 .terraform/
 builds/
 vars/pools/mainnet-01*
+*tf.plan
+*state.out

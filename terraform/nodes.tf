@@ -105,6 +105,7 @@ resource "aws_launch_template" "node" {
       volume_size           = 20
       volume_type           = "gp3"
       delete_on_termination = true
+      encrypted             = true
     }
   }
 
@@ -121,6 +122,8 @@ resource "aws_ebs_volume" "node_data" {
   for_each = local.nodes
 
   availability_zone = local.aws_vars.vpc.az
+
+  encrypted = true
 
   size = try(each.value.ebs_volume_size, 1000)
   type = "gp3"
