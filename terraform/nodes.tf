@@ -39,6 +39,9 @@ resource "tls_private_key" "ssh_keypair" {
 resource "aws_key_pair" "common" {
   key_name   = local.name_prefix
   public_key = tls_private_key.ssh_keypair.public_key_openssh
+
+  tags = local.default_tags
+
 }
 
 # Cloud-init config template
@@ -131,6 +134,7 @@ resource "aws_ebs_volume" "node_data" {
 }
 
 # Autoscaling groups
+# tflint-ignore: aws_resource_missing_tags
 resource "aws_autoscaling_group" "node" {
   for_each = local.nodes
 

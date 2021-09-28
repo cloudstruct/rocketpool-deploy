@@ -1,0 +1,86 @@
+name: TerraForm-Tests
+
+env:
+  TF_CLI_CONFIG_FILE: "${GITHUB_WORKSPACE}/.github/files/terraformrc"
+  TF_IN_AUTOMATION: 'true'
+  PIP_CACHE_DIR: "~/.cache/pip"
+on:
+  pull_request:
+    branches:
+      - main 
+    paths:
+      - '.github/workflows/terraform-tests.yml'
+      - 'terraform/**'
+      - 'vars/**'
+
+defaults:
+  run:
+    working-directory: terraform
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pool:
+          - mainnet-00
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@latest
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.7
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CICD_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.CICD_AWS_SECRET_KEY }}
+          aws-region: us-east-1
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - uses: actions/cache@v2
+        name: Cache dir
+        with:
+          path: ~/.cache
+          key: ${{ matrix.pool }}-terraform-${{ hashFiles('.terraform.lock.hcl') }}-${{ hashFiles('.tflint.hcl') }}
+
+      - name: Terraform Init
+        id: init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform Validate pool ${{ matrix.pool }}
+        id: validate
+        working-directory: terraform
+        run: |
+            terraform workspace select ${{ matrix.env }}
+            terraform validate
+
+      - uses: terraform-linters/setup-tflint@v1
+        name: Setup TFLint
+
+      - name: Init TFLint
+        id: tflint
+        run: |
+          tflint --version
+          tflint --init
+          tflint -c ../.tflint.hcl .
+
+      - name: Terraform Plan ${{ matrix.env }}
+        id: plan
+        run: |
+            terraform workspace list
+            if terraform workspace list | sed 's/\*/ /g' | grep -q ${{ matrix.env }}; then
+              terraform workspace select ${{ matrix.env }}
+              terraform init
+              terraform plan -lock-timeout=600s
+            fi

@@ -126,4 +126,12 @@ resource "aws_iam_instance_profile" "node" {
 
   name = "${local.name_prefix}-node-${each.key}"
   role = aws_iam_role.node[each.key].name
+
+  tags = merge(
+    local.default_tags,
+    {
+      Name = "${local.name_prefix}-node-${each.key}"
+    },
+  )
+
 }
