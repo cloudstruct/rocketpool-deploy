@@ -1,0 +1,30 @@
+---
+- name: Base-Firewall | Configure Firewall rules
+  community.general.ufw:
+    state: enabled
+    direction: incoming
+    policy: deny
+
+- name: Base-Firewall | Set SSH retry limit on firewall
+  community.general.ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
+
+- name: Base-Firewall | Allow SSH, ETH1 and ETH2
+  community.general.ufw:
+    state: enabled
+    rule: allow
+    name: "{{ rule.name | default(omit) }}"
+    port: "{{ rule.port | default(omit) }}"
+    comment: "{{ rule.comment | default(omit) }}"
+    proto: "{{ rule.proto | default(omit) }}"
+  loop:
+    - { name: 'OpenSSH', comment: "Allow to OpenSSH Port" }
+    - { port: 30303, proto: 'tcp', comment: "Allow ETH1 Discovery TCP" }
+    - { port: 30303, proto: 'udp', comment: "Allow ETH1 Discovery UDP" }
+    - { port: 9001, proto: 'tcp', comment: "Allow ETH2 Discovery TCP" }
+    - { port: 9001, proto: 'udp', comment: "Allow ETH2 Discovery UDP" }
+  loop_control:
+    loop_var: 'rule'
+    label: "{{ rule.comment }}"

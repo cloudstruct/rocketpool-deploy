@@ -1,0 +1,2 @@
+---
+- import_playbook: system-setup.yml

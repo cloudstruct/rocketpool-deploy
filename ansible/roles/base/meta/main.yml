@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  role_name: base
+  author: cloudstruct
+  description: Base system changes that should happen to every rocketpool node.
+  company: CloudStuct
+  license: MIT
+
+  min_ansible_version: 2.9
+
+  galaxy_tags:
+    - cloudstruct
+    - rocketpool
+    - ubuntu
+    - focal
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+
+dependencies: []
