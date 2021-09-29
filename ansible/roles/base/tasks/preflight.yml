@@ -1,0 +1,8 @@
+---
+- name: Preflight | Check required input variables
+  assert:
+    that:
+      - POOL | default(False)
+      - NODE | default(False)
+    fail_msg:
+      - "ERROR: POOL ('{{ POOL }}') or NODE ('{{ NODE }}') is not defined"

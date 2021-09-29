@@ -1,3 +1,8 @@
 ---
 grafana:
   port: 3100
+
+node_docker_users:
+  - 'rp'
+
+node_docker_compose_version: '1.29.2'

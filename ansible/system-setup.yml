@@ -1,0 +1,50 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/defaults.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/aws.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/node.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/rocketpool.yaml"
+  tasks:
+    - name: Playbook | Include base role
+      include_role:
+        name: base
+        apply:
+          tags:
+            - base
+      tags:
+        - always
+
+    - name: Playbook | Include jnv.unattended-upgrades role
+      include_role:
+        name: jnv.unattended-upgrades
+      vars:
+        unattended_remove_unused_dependencies: true
+        unattended_automatic_reboot: true
+        unattended_automatic_reboot_time: "02:00"
+
+    - name: Playbook | Include dev-sec.ssh-hardening role
+      include_role:
+        name: dev-sec.ssh-hardening
+
+    - name: Playbook | Include dev-sec.os-hardening
+      include_role:
+        name: dev-sec.os-hardening
+      vars:
+        sysctl_overwrite:
+          # Enable IPv4 traffic forwarding. Required by Docker.
+          net.ipv4.ip_forward: 1
+      tags:
+        - skipci
+
+    - name: Playbook | Include geerlingguy.docker role
+      include_role:
+        name: geerlingguy.docker
+      vars:
+        docker_compose_version: "{{ node_docker_compose_version }}"
+        docker_users: "{{ node_docker_users | default(['rp']) }}"
+        docker_daemon_options:
+          log-driver: "local"

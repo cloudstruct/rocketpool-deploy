@@ -1,0 +1,57 @@
+name: Ansible-Tests
+
+env:
+  PIP_CACHE_DIR: "${GITHUB_WORKSPACE}/.venv/cache/pip"
+  ANSIBLE_ROLES_PATH: "${GITHUB_WORKSPACE}/.venv/ansible/roles:/etc/ansible/roles:~/.ansible/roles"
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ansible-tests.yml'
+      - 'ansible/**'
+      - 'vars/**'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pool:
+          - mainnet-00
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        name: Cache dir
+        id: cache-venv
+        with:
+          path: ${GITHUB_WORKSPACE}/.venv
+          key: ${{ matrix.pool }}-venv-${{ hashFiles('**/requirements*') }}
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m venv ${GITHUB_WORKSPACE}/.venv
+          . ${GITHUB_WORKSPACE}/.venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          ansible-galaxy install -r ansible/requirements.yml
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+
+      - name: Lint playbook
+        id: ansible-lint
+        working-directory: ansible
+        run: ${GITHUB_WORKSPACE}/.venv/bin/ansible-lint -vv
+
+      - name: Run playbook
+        id: ansible-playbook
+        working-directory: ansible
+        run: ${GITHUB_WORKSPACE}/.venv/bin/ansible-playbook site.yml -e "POOL=mainnet-00" -e "NODE=core0" --skip-tags 'skipci'

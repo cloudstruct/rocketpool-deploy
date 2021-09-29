@@ -1,0 +1,10 @@
+# Collections
+collections:
+  - name: community.general
+
+# From Galaxy
+roles:
+  - src: dev-sec.os-hardening
+  - src: dev-sec.ssh-hardening
+  - src: jnv.unattended-upgrades
+  - src: geerlingguy.docker
