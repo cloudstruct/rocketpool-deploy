@@ -8,9 +8,18 @@ default_packages:
   - moreutils
   - chrony
   - htop
+  - apt-transport-https
+  - ca-certificates
+  - gnupg-agent
+  - software-properties-common
+  - update-notifier-common
+  - moreutils
 
 system:
   # This percentage value controls the tendency of the kernel to reclaim the memory which is used for caching of directory and inode objects.
   # https://sysctl-explorer.net/vm/vfs_cache_pressure/
   vfs_cache_pressure: 10
   vm_swappiness: 1
+
+rocketpool:
+  user: "rp"

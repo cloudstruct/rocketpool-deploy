@@ -40,6 +40,12 @@
     - { name: "vm.vfs_cache_pressure", value: "{{ system.vfs_cache_pressure }}" }
   tags: ['skipci']
 
+- name: System | Create rocketpool user
+  user:
+    name: "{{ rocketpool.user }}"
+    shell: /bin/bash
+    system: yes
+
 - name: System | Reboot node if required
   reboot:
     msg: "cloudstruct-rocketpool: Reboot required for system package updates."

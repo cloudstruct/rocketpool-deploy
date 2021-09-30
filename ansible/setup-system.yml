@@ -44,7 +44,7 @@
       include_role:
         name: geerlingguy.docker
       vars:
-        docker_compose_version: "{{ node_docker_compose_version }}"
-        docker_users: "{{ node_docker_users | default(['rp']) }}"
+        docker_compose_version: "{{ global.docker.compose.version }}"
+        docker_users: "{{ global.docker.users | default(['rp']) }}"
         docker_daemon_options:
           log-driver: "local"

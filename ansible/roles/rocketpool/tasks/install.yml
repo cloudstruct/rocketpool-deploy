@@ -1,0 +1,66 @@
+---
+- name: "Rocketpool Install | Download rocketpool release artifacts version '{{ rocketpool.version }}'"
+  get_url:
+    url: "{{ download.url }}"
+    dest: "{{ download.dst }}"
+    mode: 0700
+    owner: "{{ rocketpool.user }}"
+    group: "{{ rocketpool.user }}"
+  loop:
+    - { 'url': "{{ smart_install.url }}{{ smart_install.package }}", 'dst': "{{ tmpdir.path }}/{{ smart_install.package }}" }
+  loop_control:
+    loop_var: 'download'
+    label: "{{ download.dst }}"
+
+- name: "Rocketpool Install | Extract smartnode-install archive"
+  unarchive:
+    src: "{{ tmpdir.path }}/{{ smart_install.package }}"
+    dest: "{{ rocketpool_user_home }}/.rocketpool/"
+    remote_src: yes
+    include:
+      - "{{ rocketpool_arch }}/rp-smartnode-install/network/{{ eth.network }}/chains"
+      - "{{ rocketpool_arch }}/rp-smartnode-install/network/{{ eth.network }}/config.yml"
+      - "{{ rocketpool_arch }}/rp-smartnode-install/network/{{ eth.network }}/grafana-prometheus-datasource.yml"
+      - "{{ rocketpool_arch }}/rp-smartnode-install/network/{{ eth.network }}/prometheus.tmpl"
+    extra_opts: ['--strip-components=4']
+    owner: "{{ rocketpool.user }}"
+    group: "{{ rocketpool.user }}"
+  loop_control:
+    loop_var: 'archive'
+    label: "{{ archive }}"
+
+- name: "Rocketpool Install | Set file permissions"
+  file:
+    path: "{{ item }}"
+    owner: "{{ rocketpool.user }}"
+    group: "{{ rocketpool.user }}"
+    mode: 0700
+  with_fileglob:
+    - "{{ rocketpool_user_home }}/.rocketpool/chains/eth1/*.sh"
+    - "{{ rocketpool_user_home }}/.rocketpool/chains/eth2/*.sh"
+
+- name: Rocketpool Install | Template rocketpool config files
+  template:
+    src: "{{ rp_config.src }}"
+    dest: "{{ rp_config.dst }}"
+    owner: "{{ rocketpool.user }}"
+    group: "{{ rocketpool.user }}"
+    mode: "{{ rp_config.mode | default('0600') }}"
+  loop:
+    - { 'dst': "{{ rocketpool_user_home }}/.rocketpool/settings.yml" , 'src': 'settings.yml.j2' }
+    - { 'dst': "{{ rocketpool_user_home }}/.rocketpool/docker-compose.yml" , 'src': 'docker-compose.yml.j2' }
+    - { 'dst': "{{ rocketpool_user_home }}/.rocketpool/docker-compose-metrics.yml" , 'src': 'docker-compose-metrics.yml.j2' }
+    - { 'dst': "{{ rocketpool_user_home }}/.rocketpool/chains/eth2/start-beacon.sh" , 'src': 'start-beacon.sh.j2', 'mode': '0700' }
+  loop_control:
+    loop_var: 'rp_config'
+    label: "{{ rp_config.dst }}"
+
+- name: Rocketpool Install | Execute rocketpool service start command
+  become: true
+  become_user: "{{ rocketpool.user }}"
+  command: /usr/local/bin/rocketpool service start
+  args:
+    chdir: "{{ rocketpool_user_home }}/.rocketpool"
+  register: rp_svc_start
+  ignore_errors: true
+  changed_when: "'Starting' in rp_svc_start.stdout"

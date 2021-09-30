@@ -1,0 +1,9 @@
+---
+rocketpool:
+  user: 'rp'
+
+rocketpool_user_home: "/home/{{ rocketpool.user }}"
+
+smart_install:
+  package: "rp-smartnode-install-{{ rocketpool_arch }}.tar.xz"
+  url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool.version }}/"

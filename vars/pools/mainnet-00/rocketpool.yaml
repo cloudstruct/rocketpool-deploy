@@ -1,8 +1,27 @@
 ---
 grafana:
+  version: '8.1.5'
   port: 3100
 
-node_docker_users:
-  - 'rp'
+eth:
+  network: 'mainnet'
+  eth1:
+    client: 'geth'
+    client_data_path: "/data/eth1/mainnet/"
+    port: '30303'
+  eth2:
+    client: 'prysm'
+    client_data_path: "/data/eth2/mainnet/"
+    fallback_web3provider: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60f86d5a331f6d0034c9ce37'
+    port: '9001'
 
-node_docker_compose_version: '1.29.2'
+prometheus:
+  version: 'v2.30.1'
+  data_path: '/data/prometheus/'
+  node_exporter:
+    port: '9103'
+    version: 'v1.2.2'
+
+rocketpool:
+  user: 'rp'
+  version: 'v1.0.0-pre'

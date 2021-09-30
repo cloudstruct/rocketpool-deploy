@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/defaults.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/aws.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/node.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/rocketpool.yaml"
+  pre_tasks:
+    - name: "Playbook | Set rocketpool_arch fact"
+      set_fact:
+        rocketpool_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+
+    - name: "Playbook | Download rocketpool binary '{{ rocketpool.version }}'"
+      get_url:
+        url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool.version }}/rocketpool-cli-linux-{{ rocketpool_arch }}"
+        dest: '/usr/local/bin/rocketpool'
+        mode: 0750
+        owner: "{{ rocketpool.user }}"
+        group: 'root'
+
+  tasks:
+    - name: Playbook | Execute rocketpool role
+      include_role:
+        name: rocketpool
+        apply:
+          tags:
+            - rocketpool
