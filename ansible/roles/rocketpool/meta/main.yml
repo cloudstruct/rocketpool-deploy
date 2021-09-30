@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  role_name: rocketpool
+  author: cloudstruct
+  description: Installation and configuration of rocketpool and associated software
+  company: CloudStuct
+  license: MIT
+
+  min_ansible_version: 2.9
+
+  galaxy_tags:
+    - cloudstruct
+    - rocketpool
+    - ubuntu
+    - focal
+    - ethereum
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+
+dependencies: []

@@ -21,10 +21,35 @@
     proto: "{{ rule.proto | default(omit) }}"
   loop:
     - { name: 'OpenSSH', comment: "Allow to OpenSSH Port" }
-    - { port: 30303, proto: 'tcp', comment: "Allow ETH1 Discovery TCP" }
-    - { port: 30303, proto: 'udp', comment: "Allow ETH1 Discovery UDP" }
-    - { port: 9001, proto: 'tcp', comment: "Allow ETH2 Discovery TCP" }
-    - { port: 9001, proto: 'udp', comment: "Allow ETH2 Discovery UDP" }
+    - { port: "{{ eth.eth1.port }}", proto: 'tcp', comment: "Allow ETH1 Discovery TCP" }
+    - { port: "{{ eth.eth1.port }}", proto: 'udp', comment: "Allow ETH1 Discovery UDP" }
+    - { port: "{{ eth.eth2.port }}", proto: 'tcp', comment: "Allow ETH2 Discovery TCP" }
+    - { port: "{{ eth.eth2.port }}", proto: 'udp', comment: "Allow ETH2 Discovery UDP" }
+    - { port: "{{ prometheus.node_exporter.port }}", proto: 'tcp', comment: "Allow prometheus to scrape node-exporter" }
   loop_control:
     loop_var: 'rule'
     label: "{{ rule.comment }}"
+
+- name: Base-Firewall | Add fail2ban sshd configuration
+  become: true
+  become_user: 'root'
+  ini_file:
+    path: /etc/fail2ban/jail.d/ssh.conf
+    section: "sshd"
+    option: "{{ ssh_config.option }}"
+    value: "{{ ssh_config.value }}"
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+  loop:
+    - { option: "enabled", value: "true" }
+    - { option: "banaction", value: "ufw" }
+    - { option: "port", value: "{{ global.ssh.port }}" }
+    - { option: "filter", value: "sshd" }
+    - { option: "logpath", value: "%(sshd_log)s" }
+    - { option: "maxretry", value: "5" }
+  loop_control:
+    loop_var: 'ssh_config'
+    label: "{{ ssh_config.option }}"
+  notify:
+    - Restart fail2ban

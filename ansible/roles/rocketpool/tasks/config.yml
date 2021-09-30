@@ -1,0 +1,42 @@
+---
+- name: Rocketpool Config | Create data/validators directory
+  file:
+    state: directory
+    path: "{{ rocketpool_user_home }}/.rocketpool/data/validators"
+    owner: "{{ rocketpool.user }}"
+    group: "{{ rocketpool.user }}"
+    mode: 0700
+
+- name: Rocketpool Config | Create update-tracker directories
+  become: true
+  become_user: 'root'
+  file:
+    state: directory
+    path: '/var/lib/node_exporter/textfile_collector'
+    owner: 'root'
+    group: 'root'
+    mode: 0755
+
+- name: Rocketpool Config | Copy rocketpool scripts
+  become: true
+  become_user: 'root'
+  copy:
+    src: '{{ static_file.src }}'
+    dest: "{{ static_file.dst }}"
+    owner: "{{ rocketpool.user }}"
+    group: "{{ rocketpool.user }}"
+    mode: "{{ static_file.mode | default('0755') }}"
+  loop:
+    - { 'dst': "{{ rocketpool_user_home }}/.rocketpool/prune_geth.sh" , 'src': 'prune_geth.sh' }
+    - { 'dst': "/usr/share/rp-version-check.sh" , 'src': 'rp-version-check.sh' }
+    - { 'dst': "/usr/share/apt-metrics.sh" , 'src': 'apt-metrics.sh' }
+    - { 'dst': "/etc/apt/apt.conf.d/60prometheus-metrics" , 'src': 'apt-metrics.sh', 'mode': '0644' }
+  loop_control:
+    loop_var: 'static_file'
+    label: "{{ static_file.dst }}"
+
+- name: Rocketpool Config | Create temporary build directory
+  tempfile:
+    state: directory
+    suffix: build
+  register: tmpdir

@@ -1,0 +1,9 @@
+---
+- name: Main | Include rocketpool config tasks
+  include_tasks: config.yml
+
+- name: Main | Include rocketpool install tasks
+  include_tasks: install.yml
+
+- name: Main | Include rocketpool post install tasks
+  include_tasks: post_install.yml

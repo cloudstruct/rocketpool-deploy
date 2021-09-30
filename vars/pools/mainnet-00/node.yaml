@@ -4,8 +4,14 @@ global:
     # Dynamically add or replace the IP of the machine executing terraform
     # to the hosts security group SSH ALLOW list
     allow_workstation_ip: true
+    # SSH port for server to run on
     port: 22
   pool: mainnet-00
+  docker:
+    compose:
+      version: '1.29.2'
+    users:
+      - "{{ rocketpool.user }}"
 
 nodes:
   core0:
