@@ -36,6 +36,15 @@ resource "aws_s3_bucket" "deploy" {
     }
   }
 
+  versioning {
+    enabled = true
+  }
+
+  logging {
+    target_bucket = aws_s3_bucket.log_bucket.id
+    target_prefix = "log/"
+  }
+
   tags = local.default_tags
 
 }
@@ -47,4 +56,5 @@ resource "aws_s3_bucket_object" "ansible_tar_gz" {
   source     = "${path.root}/ansible-${local.rp_vars.rocketpool.version}.tar.gz"
   etag       = try(filemd5("${path.root}/ansible-${local.rp_vars.rocketpool.version}.tar.gz"), null)
   tags       = local.default_tags
+
 }
