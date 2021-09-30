@@ -43,3 +43,17 @@ mkdir -p $${MOUNT_DIR}
 echo "/dev/$${NVME_DEVICE}  /data  ext4  noatime  0  0" >> /etc/fstab
 
 mount $${MOUNT_DIR}
+
+# Start Ansible code
+python3 -m venv /root/.venv
+. /root/.venv/bin/activate
+/root/.venv/bin/python -m pip install --upgrade pip
+/root/.venv/bin/pip install awscli
+mkdir /root/cloudstruct-rocketpool-deploy
+aws s3 cp s3://${s3_deploy_bucket}/ansible-${rocketpool_version}.tar.gz /root/ansible-${rocketpool_version}.tar.gz
+tar -zxvf /root/ansible-${rocketpool_version}.tar.gz -C /root/cloudstruct-rocketpool-deploy
+pushd /root/cloudstruct-rocketpool-deploy
+/root/.venv/bin/pip install -r requirements.txt
+pushd /root/cloudstruct-rocketpool-deploy/ansible
+/root/.venv/bin/ansible-galaxy install -r requirements.yml
+/root/.venv/bin/ansible-playbook site.yml -e "POOL=${rocketpool_pool}" -e "NODE=${node_key}" 
