@@ -10,23 +10,6 @@
     state: present
     package: "{{ default_packages }}"
 
-- name: System | Set reboot required fact
-  stat:
-    path: '/var/run/reboot-required'
-    get_checksum: no
-    get_attributes: no
-    get_mime: no
-  register: reboot_required
-
-- name: System | Secure shared memory
-  mount:
-    src: none
-    path: /run/shm
-    fstype: tmpfs
-    opts: defaults,ro
-    state: mounted
-  tags: ['skipci']
-
 - name: System | Set swappiness
   ansible.posix.sysctl:
     name: "{{ sysctl.name }}"
@@ -40,19 +23,16 @@
     - { name: "vm.vfs_cache_pressure", value: "{{ system.vfs_cache_pressure }}" }
   tags: ['skipci']
 
+- name: System | Secure shared memory
+  mount:
+    src: none
+    path: /run/shm
+    fstype: tmpfs
+    opts: rw,noexec,nosuid,nodev
+    state: mounted
+  tags: ['skipci']
+
 - name: System | Create rocketpool user
   user:
     name: "{{ rocketpool.user }}"
     shell: /bin/bash
-    system: yes
-
-- name: System | Reboot node if required
-  reboot:
-    msg: "cloudstruct-rocketpool: Reboot required for system package updates."
-    connect_timeout: 5
-    reboot_timeout: 300
-    pre_reboot_delay: 10
-    post_reboot_delay: 30
-    test_command: uptime
-  when: reboot_required.stat.exists
-  tags: ['skipci']

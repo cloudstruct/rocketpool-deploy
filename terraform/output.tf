@@ -10,7 +10,3 @@ output "ssh_private_key" {
 output "node_public_ips" {
   value = join(",", [for key, val in aws_eip.node : val.public_ip])
 }
-
-output "alerts_by_node" {
-  value = local.alerts_by_node
-}

@@ -7,9 +7,15 @@
     group: "{{ rocketpool.user }}"
     mode: 0700
 
+- name: Rocketpool Config | Setup prometheus directory
+  file:
+    state: directory
+    path: "{{ prometheus.data_path }}"
+    owner: "nobody"
+    group: "nogroup"
+    mode: 0755
+
 - name: Rocketpool Config | Create update-tracker directories
-  become: true
-  become_user: 'root'
   file:
     state: directory
     path: '/var/lib/node_exporter/textfile_collector'
@@ -18,8 +24,6 @@
     mode: 0755
 
 - name: Rocketpool Config | Copy rocketpool scripts
-  become: true
-  become_user: 'root'
   copy:
     src: '{{ static_file.src }}'
     dest: "{{ static_file.dst }}"
@@ -30,7 +34,7 @@
     - { 'dst': "{{ rocketpool_user_home }}/.rocketpool/prune_geth.sh" , 'src': 'prune_geth.sh' }
     - { 'dst': "/usr/share/rp-version-check.sh" , 'src': 'rp-version-check.sh' }
     - { 'dst': "/usr/share/apt-metrics.sh" , 'src': 'apt-metrics.sh' }
-    - { 'dst': "/etc/apt/apt.conf.d/60prometheus-metrics" , 'src': 'apt-metrics.sh', 'mode': '0644' }
+    - { 'dst': "/etc/apt/apt.conf.d/60prometheus-metrics" , 'src': 'apt-prometheus-metrics', 'mode': '0644' }
   loop_control:
     loop_var: 'static_file'
     label: "{{ static_file.dst }}"

@@ -9,7 +9,7 @@ module "vpc" {
   private_subnets = [local.aws_vars.vpc.private_subnet]
   public_subnets  = [local.aws_vars.vpc.public_subnet]
 
-  enable_nat_gateway = true
+  enable_nat_gateway = false
 
   tags = local.default_tags
 }

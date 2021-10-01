@@ -31,8 +31,6 @@
     label: "{{ rule.comment }}"
 
 - name: Base-Firewall | Add fail2ban sshd configuration
-  become: true
-  become_user: 'root'
   ini_file:
     path: /etc/fail2ban/jail.d/ssh.conf
     section: "sshd"

@@ -61,6 +61,6 @@
   command: /usr/local/bin/rocketpool service start
   args:
     chdir: "{{ rocketpool_user_home }}/.rocketpool"
-  register: rp_svc_start
-  ignore_errors: true
-  changed_when: "'Starting' in rp_svc_start.stdout"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  changed_when: True
