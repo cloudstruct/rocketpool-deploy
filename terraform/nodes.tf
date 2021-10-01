@@ -10,6 +10,9 @@ locals {
       for key, val in local.nodes :
       key => aws_ebs_volume.node_data[key].id
     }
+    rocketpool_pool    = local.pool
+    rocketpool_version = local.rp_vars.rocketpool.version
+    s3_deploy_bucket   = aws_s3_bucket.deploy.id
   }
 }
 

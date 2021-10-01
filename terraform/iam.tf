@@ -52,6 +52,27 @@ data "aws_iam_policy_document" "eip_attach" {
   }
 }
 
+data "aws_iam_policy_document" "s3_deploy" {
+
+  statement {
+    actions = [
+      "s3:ListBucket",
+      "s3:GetBucketLocation"
+    ]
+    resources = [aws_s3_bucket.deploy.arn]
+  }
+
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject"
+    ]
+    resources = ["${aws_s3_bucket.deploy.arn}/*"]
+  }
+
+}
+
 # Policy allowing attaching the node's EBS volume
 data "aws_iam_policy_document" "ebs_attach" {
   for_each = local.nodes
@@ -97,6 +118,11 @@ resource "aws_iam_role" "node" {
   inline_policy {
     name   = "ebs-attach"
     policy = data.aws_iam_policy_document.ebs_attach[each.key].json
+  }
+
+  inline_policy {
+    name   = "s3-deploy"
+    policy = data.aws_iam_policy_document.s3_deploy.json
   }
 
   # Not all nodes have a matching eip-attach policy, so this is a bit hand-wavy
