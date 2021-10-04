@@ -82,7 +82,7 @@ jobs:
       - name: terraform-compliance-remote
         id: terraform-compliance-user-friendly-features
         run: |
-          terraform-compliance -p ${{ matrix.pool }}.plan.json -f git:https://github.com/terraform-compliance/user-friendly-features.git
+          terraform-compliance -p ${{ matrix.pool }}.plan.json -f git:https://github.com/cloudstruct/terraform-compliance-tests.git//?ref=main
 
       - name: terraform-compliance-local
         id: terraform-compliance-local

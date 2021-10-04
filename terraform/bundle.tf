@@ -15,7 +15,7 @@ EOF
 }
 
 resource "local_file" "tar_sh" {
-  filename = "${path.module}/tar.sh"
+  filename = "${path.module}/../scripts/tar.sh"
   content  = data.template_file.tar_sh.rendered
 }
 

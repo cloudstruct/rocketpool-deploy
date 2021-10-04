@@ -1,4 +1,10 @@
 ---
+- name: Rocketpool Install | Create temporary build directory
+  tempfile:
+    state: directory
+    suffix: build
+  register: tmpdir
+
 - name: "Rocketpool Install | Download rocketpool release artifacts version '{{ rocketpool.version }}'"
   get_url:
     url: "{{ download.url }}"

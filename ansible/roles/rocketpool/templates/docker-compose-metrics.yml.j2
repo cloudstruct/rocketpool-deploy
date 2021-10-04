@@ -46,8 +46,9 @@ services:
     ports:
       - "${GRAFANA_PORT:-3100}:${GRAFANA_PORT:-3100}/tcp"
     volumes:
-      - "./grafana-prometheus-datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml"
-      - "grafana-storage:/var/lib/grafana"
+      - "{{ grafana.data_path }}/var/lib/grafana:/var/lib/grafana"
+      - "{{ rocketpool_user_home}}/.rocketpool/grafana-prometheus-datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml"
+      - "{{ rocketpool_user_home}}/.rocketpool/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml"
     networks:
       - net
 networks:
@@ -62,7 +63,3 @@ networks:
           ip_range: 172.23.5.0/24
           gateway: 172.23.5.254
   net:
-
-volumes:
-  grafana-storage:
-  prometheus-data:
