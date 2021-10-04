@@ -1,7 +1,8 @@
 ---
 grafana:
-  version: '8.1.5'
+  data_path: '/data/grafana'
   port: 3100
+  version: '8.1.5'
 
 eth:
   network: 'mainnet'
