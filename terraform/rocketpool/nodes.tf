@@ -36,12 +36,13 @@ data "aws_ami" "ubuntu" {
 
 # Generate SSH keypair
 resource "tls_private_key" "ssh_keypair" {
+  count = local.aws_vars.create_rsa_key ? 1 : 0
   algorithm = "RSA"
 }
 
 resource "aws_key_pair" "common" {
   key_name   = local.name_prefix
-  public_key = tls_private_key.ssh_keypair.public_key_openssh
+  public_key = local.aws_vars.create_rsa_key ? tls_private_key.ssh_keypair.public_key_openssh : local.default_vars.ssh_public_key
 
   tags = local.default_tags
 

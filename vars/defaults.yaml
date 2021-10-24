@@ -4,3 +4,4 @@ ssh_whitelist: []
 # Example:
 # ssh_whitelist:
 #   - 1.2.3.4/32  
+ssh_public_key: ''

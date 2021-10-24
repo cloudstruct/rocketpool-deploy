@@ -2,7 +2,7 @@
 grafana:
   data_path: '/data/grafana'
   port: 3100
-  version: '8.1.5'
+  version: '8.2.2'
 
 eth:
   network: 'mainnet'
@@ -17,7 +17,7 @@ eth:
     port: '9001'
 
 prometheus:
-  version: 'v2.30.1'
+  version: 'v2.30.3'
   data_path: '/data/prometheus/'
   node_exporter:
     port: '9103'
@@ -25,4 +25,4 @@ prometheus:
 
 rocketpool:
   user: 'rp'
-  version: 'v1.0.0-pre'
+  version: 'v1.0.0-pre3'

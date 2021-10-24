@@ -1,8 +1,10 @@
 .terraform/
 builds/
 vars/pools/mainnet-01*
+vars/pools/mainnet-02*
 *tf.plan
 *state.out
 terraform/plan
 terraform/plan.json
 terraform/ansible*.gz
+terraform/bootstrap/terraform.tfstate.d

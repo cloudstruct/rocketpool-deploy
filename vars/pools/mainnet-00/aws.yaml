@@ -37,6 +37,7 @@ cloudwatch:
       threshold: "0"
 
 ec2:
+  create_rsa_key: true
   core:
     instance_type: r5a.large
     allow_workstation_ip: true
