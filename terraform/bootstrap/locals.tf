@@ -1,9 +1,9 @@
 locals {
   pool = terraform.workspace
 
-  defaults_vars = yamldecode(file("../../vars/defaults.yaml"))
-  aws_vars      = yamldecode(file("../../vars/pools/${local.pool}/aws.yaml"))
-  rp_vars       = yamldecode(file("../../vars/pools/${local.pool}/rocketpool.yaml"))
+  default_vars = yamldecode(file("../../vars/defaults.yaml"))
+  aws_vars     = yamldecode(file("../../vars/pools/${local.pool}/aws.yaml"))
+  rp_vars      = yamldecode(file("../../vars/pools/${local.pool}/rocketpool.yaml"))
 
   name_prefix = "rocket-pool-${local.pool}"
 

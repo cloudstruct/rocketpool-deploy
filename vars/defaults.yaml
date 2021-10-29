@@ -4,4 +4,4 @@ ssh_whitelist: []
 # Example:
 # ssh_whitelist:
 #   - 1.2.3.4/32  
-ssh_public_key: ''
+ssh_public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAOCVI642Tm4iFDcX648n6N7+jl3shmbMAvv60gg2iwilb0nw5lpB170adNYv+rLIvURqpKZEVnUbS9/QloaQhOQPtJMMmT9XapkouennnSznxVcWMvszewqAhHrpWVsOFsayhe8UtwP059j1jAfkBF9jlTvo+h/SfK/ZvTFuAiAPnEc0RYNjzbmLxglZmlcQodNa3wDCbQVvh2JN2WDb2U7d7Bg2H82FAmo6Uj0HGtQSHEXIeQ6xAOqv7cpaa6PCnmHqf45YQQhzVITLC6kHT5/6ZJUcTGop7kubP0kTRgOMwKfwwHkdGcXC+1we5AhpGx3DbT+x46XBEi3eHaUZt'

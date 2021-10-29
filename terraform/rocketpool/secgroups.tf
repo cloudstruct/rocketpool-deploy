@@ -1,5 +1,5 @@
 locals {
-  ssh_whitelist = concat(local.defaults_vars.ssh_whitelist, [try("${data.http.workstation_public_ip[0].body}/32", null)])
+  ssh_whitelist = concat(local.default_vars.ssh_whitelist, [try("${data.http.workstation_public_ip[0].body}/32", null)])
 }
 
 data "http" "workstation_public_ip" {

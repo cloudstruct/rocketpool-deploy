@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   eth1:
-    image: ${ETH1_IMAGE}
+    image: {{ eth.eth1.image | default('${ETH1_IMAGE}') }}
     container_name: ${COMPOSE_PROJECT_NAME}_eth1
     restart: unless-stopped
     stop_grace_period: 3m
@@ -33,7 +33,7 @@ services:
     security_opt:
       - no-new-privileges
   eth2:
-    image: ${ETH2_IMAGE}
+    image: {{ eth.eth2.image | default('${ETH2_IMAGE}') }}
     user: root
     container_name: ${COMPOSE_PROJECT_NAME}_eth2
     restart: unless-stopped
@@ -57,6 +57,8 @@ services:
       - ETH2_MAX_PEERS=${ETH2_MAX_PEERS}
       - ENABLE_METRICS=${ENABLE_METRICS}
       - ETH2_METRICS_PORT=${ETH2_METRICS_PORT}
+      - EXTERNAL_IP=${EXTERNAL_IP}
+      - ETH2_CHECKPOINT_SYNC_URL=${ETH2_CHECKPOINT_SYNC_URL}
     entrypoint: sh
     command: "/setup/start-beacon.sh"
     depends_on:
@@ -68,7 +70,7 @@ services:
     security_opt:
       - no-new-privileges
   validator:
-    image: ${VALIDATOR_IMAGE}
+    image: {{ eth.prysm.validator.image | default('${VALIDATOR_IMAGE}') }}
     user: root
     container_name: ${COMPOSE_PROJECT_NAME}_validator
     restart: unless-stopped

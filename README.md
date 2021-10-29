@@ -7,19 +7,23 @@ Automation to deploy/manage a Rocketpool Ethereum staking pool node
 - Currently only supports Prsym as ETH2 validator
 
 ## Pre-requisites
-- An AWS Account and AWS Access & Secret key credentials
-- A linux workstation with required software installed (See Install Notes below)
+- An AWS Account and AWS Access & Secret key credentials setup and ready to use
+- An ubuntu CLI which has python3, python3-pip, and python3-venv installed.
 
 ## Install notes
 ```
-python3 -m venv ~/.cloudstruct
-. ~/.cloudstruct/bin/activate
-./scripts/setup_virtualenv.sh
-cd terraform
-terraform workspace create mainnet-01
+scripts/quick-install.sh
 ```
 
+### Obtain Private SSH Key
+If you set the config to generate an SSH key for you via AWS then you can use the following command to retrieve this key from the encrypted s3 bucket.
+`terraform output -json | jq '.ssh_private_key.value' -r`
+
 ## What does it do?
+- Performs environment checks/pre-execution validation
+- Creates a python3 virtual environment and installs required software
+- Runs the terraform bootstrap to setup object storage for state file and dynamodb for state locking
+- Runs the terraform to setup rocketpool
 - terraform takes information from configured yaml and:
 - create AWS VPC, subnets, route tables, etc. etc.
 - creates a deployment s3 bucket

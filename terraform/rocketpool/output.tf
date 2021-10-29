@@ -4,7 +4,7 @@ output "vpc_id" {
 
 output "ssh_private_key" {
   sensitive = true
-  value     = tls_private_key.ssh_keypair.private_key_pem
+  value     = try(tls_private_key.ssh_keypair.0.private_key_pem, "USER_PROVIDED")
 }
 
 output "node_public_ips" {

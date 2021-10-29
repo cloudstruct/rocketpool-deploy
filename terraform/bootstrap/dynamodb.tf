@@ -8,6 +8,6 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
   }
   tags = merge(
     { "Name" = "terraform-state-lock" },
-    local.tags
+    local.default_tags
   )
 }
