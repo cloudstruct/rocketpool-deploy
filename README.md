@@ -10,7 +10,14 @@ Automation to deploy/manage a Rocketpool Ethereum staking pool node
 - An AWS Account and AWS Access & Secret key credentials setup and ready to use
 - An ubuntu CLI which has python3, python3-pip, and python3-venv installed.
 
-## Install notes
+## Pre-Install Notes
+Take a look at and edit the following files as desired. The comments should provide context.
+- [vars/defaults.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/defaults.yaml)
+- [vars/pools/mainnet-00/aws.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/aws.yaml)
+- [vars/pools/mainnet-00/node.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/node.yaml)
+- [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml)
+
+## Install Notes
 ```
 scripts/quick-install.sh
 ```

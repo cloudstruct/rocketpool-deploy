@@ -8,16 +8,20 @@ global:
     port: 22
   pool: mainnet-00
   docker:
+    # docker-compose release version
+    # https://github.com/docker/compose/releases
     compose:
       version: '1.29.2'
+    # Linux users to give docker daemon permissions to
     users:
       - "{{ rocketpool.user }}"
 
 nodes:
   core0:
     type: "core"
+    # Use an elastic IP address
     eip: true
-    # ebs_volume_size: 1000    # Optiona: defaults to 1000G
+    # ebs_volume_size: 1000    # Optional: defaults to 1000G
     # couldwatch: true         # Optional: defaults to True
     # eth_network: "mainnet"   # Optional: defaults to mainnet
     # keypair: my-key-pair     # Specify existing AWS SSH Keypair 
