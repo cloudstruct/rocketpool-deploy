@@ -1,21 +1,37 @@
 ---
+# Rocketpool Settings
+rocketpool:
+  # Linux user under whom rocketpool will be installed
+  user: 'rp'
+  # https://github.com/rocket-pool/smartnode-install/releases
+  version: 'v1.0.0-pre4'
+
 grafana:
+  # Where to store grafana persistent data (/data is EBS volume mount location)
   data_path: '/data/grafana'
+  # Port to expose Grafana on
   port: 3100
+  # https://grafana.com/docs/grafana/latest/release-notes/
   version: '8.2.2'
 
 eth:
   network: 'mainnet'
   eth1:
     client: 'geth'
+    # Where to store ETH1 persistent data. (/data is EBS volume mount location)
     client_data_path: "/data/eth1/mainnet/"
+    # Override ETH1 client docker image version
     # image: ethereum/client-go:v1.10.11
     port: '30303'
     
   eth2:
+    # Currently only supports `prysm'
     client: 'prysm'
+    # Where to store ETH2 persistent data. (/data is EBS volume mount location)
     client_data_path: "/data/eth2/mainnet/"
-    fallback_web3provider: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60f86d5a331f6d0034c9ce37'
+    # If you have a fallback web3 provider, specify it here.
+    # fallback_web3provider: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60f86d5a331f6d0034c9ce37'
+    # Override ETH1 client docker image version
     # image: prysmaticlabs/prysm-beacon-chain:HEAD-a80b1c-debug #v2.0.2
     # max_peers: 50
     port: '9001'
@@ -25,12 +41,12 @@ eth:
 #      image: prysmaticlabs/prysm-validator:HEAD-a80b1c-debug #v2.0.2
 
 prometheus:
+  # https://github.com/prometheus/prometheus/releases
   version: 'v2.30.3'
+  # Where to store Prometheus persistent data. (/data is EBS volume mount location)
   data_path: '/data/prometheus/'
+  # Node Exporter settings
   node_exporter:
     port: '9103'
+    # https://github.com/prometheus/node_exporter/releases
     version: 'v1.2.2'
-
-rocketpool:
-  user: 'rp'
-  version: 'v1.0.0-pre3'

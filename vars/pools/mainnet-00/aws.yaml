@@ -1,7 +1,12 @@
 ---
+# Region to deploy your rocketpool vpc and node
 region: 'us-east-2'
-create_rsa_key: false
 
+# Whether or not to create the SSH key for the node
+# Set to false if specifying a pre-existing public key
+create_rsa_key: true
+
+# CloudWatch alerts for your node
 cloudwatch:
   core:
     cpu:
@@ -38,17 +43,21 @@ cloudwatch:
       threshold: "0"
 
 ec2:
-  create_rsa_key: true
+  # Core node. Currently the only node 'type'.
   core:
+    # AWS Instance Type
     instance_type: r5a.large
+    # Automatically get your executing workstation public IP and add to SSH whitelist
     allow_workstation_ip: true
 
+# VPC Network Settings
 vpc:
   cidr: '10.0.0.0/16'
   az: 'us-east-2c'
   private_subnet: '10.0.1.0/24'
   public_subnet: '10.0.101.0/24'
 
+# S3 bucket used to store objects related to rocketpool deployment
 s3:
   buckets:
     deploy:
@@ -58,5 +67,5 @@ sns:
 #  Uncomment the below to enable slack alerting via AWS Lamba and SNS
 #  slack:
 #    topic_name: slack-rocketpool-alert
-#    channel: monitoring
+#    channel: #monitoring
 #    webhook: ""
