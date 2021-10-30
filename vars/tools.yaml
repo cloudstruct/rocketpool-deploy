@@ -2,14 +2,5 @@ yq:
   version: 4.13.2
   url: https://github.com/mikefarah/yq/releases/download/vVERSION/yq_linux_amd64
 terraform:
-  version: 1.0.8
+  version: 1.0.10
   url: https://releases.hashicorp.com/terraform/VERSION/terraform_VERSION_linux_amd64.zip
-kubectl:
-  version: 1.22.2
-  url: https://storage.googleapis.com/kubernetes-release/release/vVERSION/bin/linux/amd64/kubectl
-helm:
-  version: 3.7.1
-  url: https://get.helm.sh/helm-vVERSION-linux-amd64.tar.gz
-helmfile:
-  version: 0.141.0
-  url: https://github.com/roboll/helmfile/releases/download/vVERSION/helmfile_linux_amd64

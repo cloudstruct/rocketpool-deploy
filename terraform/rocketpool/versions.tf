@@ -1,11 +1,11 @@
 terraform {
   backend "s3" {
-    bucket         = "cloudstruct-rocketpool-terraform-state"
+    bucket         = "cloudstruct-rocketpool-tf-state"
     key            = "rocketpool.tfstate"
-    region         = "us-east-1"
+    region         = "us-east-2"
     dynamodb_table = "terraform-state-lock"
     encrypt        = true
-    kms_key_id     = "alias/cloudstruct_rocketpool_terraform_key"
+    kms_key_id     = "alias/cloudstruct_rocketpool_tfkey"
   }
 
   required_providers {

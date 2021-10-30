@@ -14,6 +14,7 @@ on:
 defaults:
   run:
     shell: bash
+    working-directory: ansible
 
 jobs:
   build:
@@ -35,13 +36,13 @@ jobs:
         id: cache-python
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.pool }}-${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
+          key: ${{ matrix.pool }}-${{ env.pythonLocation }}-${{ hashFiles('requirements_dev.txt') }}
 
       - name: Install Python dependencies
         id: python-pip-install
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r ${GITHUB_WORKSPACE}/requirements_dev.txt
         if: steps.cache-python.outputs.cache-hit != 'true'
 
       - uses: actions/cache@v2
@@ -53,15 +54,13 @@ jobs:
 
       - name: Install Ansible-Galaxy dependencies
         id: ansible-galaxy-install
-        run: ansible-galaxy install -r ansible/requirements.yml
+        run: ansible-galaxy install -r requirements.yml
         if: steps.cache-ansible.outputs.cache-hit != 'true'
 
-      - name: Lint playbook
+      - name: Lint Ansible Playbook
         id: ansible-lint
-        working-directory: ansible
-        run: ansible-lint -vv
+        run: ansible-lint -vv --exclude ~/.ansible site.yml
 
       - name: Run playbook
         id: ansible-playbook
-        working-directory: ansible
         run: ansible-playbook site.yml -e "POOL=mainnet-00" -e "NODE=core0" --skip-tags 'skipci'

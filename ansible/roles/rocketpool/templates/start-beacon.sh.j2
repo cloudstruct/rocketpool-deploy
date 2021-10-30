@@ -28,6 +28,10 @@ if [ "$CLIENT" = "lighthouse" ]; then
         CMD="$CMD --metrics --metrics-address 0.0.0.0 --metrics-port $ETH2_METRICS_PORT --validator-monitor-auto"
     fi
 
+    if [ ! -z "$ETH2_CHECKPOINT_SYNC_URL" ]; then
+        CMD="$CMD --checkpoint-sync-url $ETH2_CHECKPOINT_SYNC_URL"
+    fi
+
     exec ${CMD}
 
 fi
@@ -40,7 +44,7 @@ if [ "$CLIENT" = "nimbus" ]; then
     mkdir -p /validators/nimbus/validators
     mkdir -p /validators/nimbus/secrets
 
-    CMD="/home/user/nimbus-eth2/build/nimbus_beacon_node --non-interactive --enr-auto-update --network=mainnet --data-dir=/ethclient/nimbus --tcp-port=$ETH2_P2P_PORT --udp-port=$ETH2_P2P_PORT --web3-url=$ETH1_WS_PROVIDER --rpc --rpc-address=0.0.0.0 --rpc-port=5052 --insecure-netkey-password=true --validators-dir=/validators/nimbus/validators --secrets-dir=/validators/nimbus/secrets"
+    CMD="/home/user/nimbus-eth2/build/nimbus_beacon_node --non-interactive --enr-auto-update --network=mainnet --data-dir=/ethclient/nimbus --tcp-port=$ETH2_P2P_PORT --udp-port=$ETH2_P2P_PORT --web3-url=$ETH1_WS_PROVIDER --rpc --rpc-address=0.0.0.0 --rpc-port=5052 --insecure-netkey-password=true --validators-dir=/validators/nimbus/validators --secrets-dir=/validators/nimbus/secrets --num-threads=0"
 
     if [ ! -z "$ETH2_MAX_PEERS" ]; then
         CMD="$CMD --max-peers=$ETH2_MAX_PEERS"
@@ -48,6 +52,10 @@ if [ "$CLIENT" = "nimbus" ]; then
 
     if [ "$ENABLE_METRICS" -eq "1" ]; then
         CMD="$CMD --metrics --metrics-address=0.0.0.0 --metrics-port=$ETH2_METRICS_PORT"
+    fi
+
+    if [ ! -z "$EXTERNAL_IP" ]; then
+        CMD="$CMD --nat=extip:$EXTERNAL_IP"
     fi
 
     # Graffiti breaks if it's in the CMD string instead of here because of spaces
@@ -62,7 +70,7 @@ if [ "$CLIENT" = "prysm" ]; then
     CMD="/app/cmd/beacon-chain/beacon-chain --fallback-web3provider={{ eth.eth2.fallback_web3provider }} --accept-terms-of-use --mainnet --datadir /ethclient/prysm --p2p-tcp-port $ETH2_P2P_PORT --p2p-udp-port $ETH2_P2P_PORT --http-web3provider $ETH1_PROVIDER --rpc-host 0.0.0.0 --rpc-port 5052 --eth1-header-req-limit 150"
 
     if [ ! -z "$ETH2_MAX_PEERS" ]; then
-        CMD="$CMD --p2p-max-peers $ETH2_MAX_PEERS"
+        CMD="$CMD --p2p-max-peers {{ eth.eth2.max_peers | default('$ETH2_MAX_PEERS') }}"
     fi
 
     if [ "$ENABLE_METRICS" -eq "1" ]; then
@@ -87,6 +95,10 @@ if [ "$CLIENT" = "teku" ]; then
 
     if [ "$ENABLE_METRICS" -eq "1" ]; then
         CMD="$CMD --metrics-enabled=true --metrics-interface=0.0.0.0 --metrics-port=$ETH2_METRICS_PORT --metrics-host-allowlist=*"
+    fi
+
+    if [ ! -z "$ETH2_CHECKPOINT_SYNC_URL" ]; then
+        CMD="$CMD --initial-state=$ETH2_CHECKPOINT_SYNC_URL/eth/v1/debug/beacon/states/finalized"
     fi
 
     exec ${CMD}

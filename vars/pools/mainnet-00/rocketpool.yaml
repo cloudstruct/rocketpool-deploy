@@ -9,12 +9,20 @@ eth:
   eth1:
     client: 'geth'
     client_data_path: "/data/eth1/mainnet/"
+    # image: ethereum/client-go:v1.10.11
     port: '30303'
+    
   eth2:
     client: 'prysm'
     client_data_path: "/data/eth2/mainnet/"
     fallback_web3provider: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60f86d5a331f6d0034c9ce37'
+    # image: prysmaticlabs/prysm-beacon-chain:HEAD-a80b1c-debug #v2.0.2
+    # max_peers: 50
     port: '9001'
+
+#  prysm:
+#    validator:
+#      image: prysmaticlabs/prysm-validator:HEAD-a80b1c-debug #v2.0.2
 
 prometheus:
   version: 'v2.30.3'
