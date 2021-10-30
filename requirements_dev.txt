@@ -1,3 +1,4 @@
+awscli
 ansible
 ansible-lint
 terraform-compliance

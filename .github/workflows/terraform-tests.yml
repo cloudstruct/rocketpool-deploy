@@ -23,8 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pool:
-          - mainnet-00
+        pool: ['mainnet-00']
+        dir: ['bootstrap','rocketpool']
     steps:
       - uses: actions/checkout@v2
       - uses: terraform-compliance/github_action@main
@@ -32,59 +32,72 @@ jobs:
         uses: terraform-linters/setup-tflint@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.7
+          terraform_version: 1.0.10
+
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.CICD_AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.CICD_AWS_SECRET_KEY }}
           aws-region: us-east-1
+
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
+
       - uses: actions/cache@v2
         name: Cache dir
         with:
           path: ~/.cache
-          key: ${{ matrix.pool }}-terraform-${{ hashFiles('.terraform.lock.hcl') }}-${{ hashFiles('.tflint.hcl') }}
+          key: ${{ matrix.pool }}-${{ matrix.dir }}-${{ hashFiles('.terraform.lock.hcl') }}-${{ hashFiles('.tflint.hcl') }}
 
       - name: Terraform Init
         id: init
-        working-directory: terraform
-        run: terraform init
+        working-directory: terraform/${{ matrix.dir }}
+        run: |
+          if [[ "${{ matrix.dir }}" == "rocketpool" ]]; then
+            cp ${GITHUB_WORKSPACE}/.github/files/rocketpool_versions.tf versions.tf
+          fi
+          terraform init -input=false
+          terraform workspace new ${{ matrix.pool }}
 
       - name: Terraform Validate pool ${{ matrix.pool }}
         id: validate
-        working-directory: terraform
+        working-directory: terraform/${{ matrix.dir }}
         run: |
             terraform workspace select ${{ matrix.pool }}
             terraform validate
 
       - name: Execute TFLint
         id: tflint
+        working-directory: terraform/${{ matrix.dir }}
         run: |
           tflint --version
-          tflint --init -c ../.tflint.hcl
-          tflint -c ../.tflint.hcl .
+          tflint --init -c ${GITHUB_WORKSPACE}/.tflint.hcl
+          tflint -c ${GITHUB_WORKSPACE}/.tflint.hcl .
 
       - name: Terraform Plan ${{ matrix.pool }}
         id: plan
+        working-directory: terraform/${{ matrix.dir }}
         run: |
-            terraform workspace list
-            if terraform workspace list | sed 's/\*/ /g' | grep -q ${{ matrix.pool }}; then
-              terraform workspace select ${{ matrix.pool }}
-              terraform init
-              terraform plan -lock-timeout=600s -out=${{ matrix.pool }}.plan
-              terraform show -json ${{ matrix.pool }}.plan > ${{ matrix.pool }}.plan.json
-            fi
+          terraform workspace list
+          if terraform workspace list | sed 's/\*/ /g' | grep -q ${{ matrix.pool }}; then
+            terraform workspace select ${{ matrix.pool }}
+            terraform init -input=false
+            terraform plan -input=false -lock=false -out=${{ matrix.pool }}-${{ matrix.dir }}.plan
+            terraform show -json ${{ matrix.pool }}-${{ matrix.dir }}.plan > ${{ matrix.pool }}-${{ matrix.dir }}.plan.json
+          fi
 
       - name: terraform-compliance-remote
         id: terraform-compliance-user-friendly-features
+        working-directory: terraform/${{ matrix.dir }}
         run: |
-          terraform-compliance -p ${{ matrix.pool }}.plan.json -f git:https://github.com/cloudstruct/terraform-compliance-tests.git//?ref=main
+          terraform-compliance -p ${{ matrix.pool }}-${{ matrix.dir }}.plan.json -f git:https://github.com/cloudstruct/terraform-compliance-tests.git//?ref=main
 
       - name: terraform-compliance-local
         id: terraform-compliance-local
+        working-directory: terraform/${{ matrix.dir }}
         run: |
-          terraform-compliance -p ${{ matrix.pool }}.plan.json -f ../.github/terraform-compliance
+          terraform-compliance -p ${{ matrix.pool }}-${{ matrix.dir }}.plan.json -f ${GITHUB_WORKSPACE}/.github/terraform-compliance
