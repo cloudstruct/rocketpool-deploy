@@ -6,5 +6,6 @@ vars/pools/mainnet-02*
 *state.out
 terraform/plan
 terraform/plan.json
-terraform/ansible*.gz
 terraform/bootstrap/terraform.tfstate.d
+terraform/rocketpool/ansible-*.gz
+terraform/scripts/tar.sh

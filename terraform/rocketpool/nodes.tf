@@ -41,6 +41,8 @@ resource "tls_private_key" "ssh_keypair" {
 }
 
 resource "aws_key_pair" "common" {
+  count = try(local.aws_vars.upload_rsa_key, local.aws_vars.create_rsa_key, false) ? 1 : 0
+
   key_name   = local.name_prefix
   public_key = local.aws_vars.create_rsa_key ? tls_private_key.ssh_keypair[0].public_key_openssh : local.default_vars.ssh_public_key
 
@@ -85,7 +87,7 @@ resource "aws_launch_template" "node" {
   name_prefix   = "${local.name_prefix}-node-${each.key}"
   image_id      = data.aws_ami.ubuntu.image_id
   instance_type = local.aws_vars.ec2[each.value.type].instance_type
-  key_name      = try(each.value.keypair, aws_key_pair.common.key_name)
+  key_name      = try(aws_key_pair.common[0].key_name, each.value.keypair)
 
   update_default_version = true
 
