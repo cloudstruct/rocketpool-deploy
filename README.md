@@ -1,6 +1,14 @@
 # CloudStruct Rocketpool Terraform and Ansible
 Automation to deploy/manage a Rocketpool Ethereum staking pool node
 
+## Why?
+You may be asking why does this repo exist?  Rocketpool already has a fantastic install guide, docker containers, docker-compose setup, etc.
+The reasons someone might want to use this repo are:
+* Production level deployment (Things like uptime, self-healing, monitoring, notifications for monitoring, and repeatability)
+* You do not want to put the effort in to doing it manually.
+* You do not want to concern yourself with constantly maintaining and updating your node
+* You would like to leverage the experience and knowledge of a company filled with experts doing DevOps As A Service (CloudStruct)
+
 ## Known limitations
 - Currently only built for AWS
 - Currently only supports Prsym as ETH2 validator
