@@ -1,27 +1,19 @@
 ---
-- name: Rocketpool Config | Create data/validators directory
+- name: Rocketpool Config | Setup config directories
   file:
     state: directory
-    path: "{{ rocketpool_user_home }}/.rocketpool/data/validators"
-    owner: "{{ rocketpool.user }}"
-    group: "{{ rocketpool.user }}"
-    mode: 0700
-
-- name: Rocketpool Config | Setup prometheus directory
-  file:
-    state: directory
-    path: "{{ prometheus.data_path }}/var/lib/grafana/dashboards"
-    owner: "nobody"
-    group: "nogroup"
-    mode: 0755
-
-- name: Rocketpool Config | Create update-tracker directories
-  file:
-    state: directory
-    path: '/var/lib/node_exporter/textfile_collector'
-    owner: 'root'
-    group: 'root'
-    mode: 0755
+    path: "{{ configdir.path }}"
+    owner: "{{ configdir.user }}"
+    group: "{{ configdir.group }}"
+    mode: "{{ configdir.mode }}"
+  loop:
+    - { 'path': "{{ rocketpool_user_home }}/.rocketpool/data/validators", 'user': "{{ rocketpool.user }}", 'group': "{{ rocketpool.user }}", 'mode': '0755' }
+    - { 'path': "{{ prometheus.data_path }}/var/lib/grafana/dashboards", 'user': "nobody", 'group': "nogroup", 'mode': '0755' }
+    - { 'path': "/var/lib/node_exporter/textfile_collector", 'user': "root", 'group': "root", 'mode': '0755' }
+    - { 'path': "{{ grafana.data_path }}", 'user': "{{ rocketpool.user }}", 'group': "{{ rocketpool.user }}", 'mode': '0775' }
+  loop_control:
+    label: "{{ configdir.path }}"
+    loop_var: "configdir"
 
 - name: Rocketpool Config | Copy rocketpool scripts
   copy:

@@ -47,10 +47,11 @@ services:
       - "${GRAFANA_PORT:-3100}:${GRAFANA_PORT:-3100}/tcp"
     volumes:
       - "{{ grafana.data_path }}/var/lib/grafana:/var/lib/grafana"
-      - "{{ rocketpool_user_home}}/.rocketpool/grafana-prometheus-datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml"
-      - "{{ rocketpool_user_home}}/.rocketpool/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml"
+      - "{{ rocketpool_user_home }}/.rocketpool/grafana-prometheus-datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml"
+      - "{{ rocketpool_user_home }}/.rocketpool/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml"
     networks:
       - net
+    user: "{{ rocketpool.uid }}"
 networks:
   # Bridge so node-exporter can get the real NIC details
   # See https://stackoverflow.com/a/66689508 for more info

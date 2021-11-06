@@ -3,6 +3,7 @@
 rocketpool:
   # Linux user under whom rocketpool will be installed
   user: 'rp'
+  uid: '1001'
   # https://github.com/rocket-pool/smartnode-install/releases
   version: 'v1.0.0'
 

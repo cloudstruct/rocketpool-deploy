@@ -1,6 +1,7 @@
 ---
 rocketpool:
   user: 'rp'
+  uid: '1001'
 
 rocketpool_user_home: "/home/{{ rocketpool.user }}"
 
