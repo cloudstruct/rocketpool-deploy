@@ -36,3 +36,4 @@
   user:
     name: "{{ rocketpool.user }}"
     shell: /bin/bash
+    uid: "{{ rocketpool.uid if lookup('env', 'CI') != 'true' else omit }}"
