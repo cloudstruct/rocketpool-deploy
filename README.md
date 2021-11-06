@@ -2,7 +2,6 @@
 Automation to deploy/manage a Rocketpool Ethereum staking pool node
 
 ## Known limitations
-- This is in early alpha and not a proven setup yet.
 - Currently only built for AWS
 - Currently only supports Prsym as ETH2 validator
 
@@ -17,9 +16,21 @@ Take a look at and edit the following files as desired. The comments should prov
 - [vars/pools/mainnet-00/node.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/node.yaml)
 - [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml)
 
+The latest supported version can always be found [Here](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml#L7).
+
 ## Install Notes
+Execute the `./scripts/quick-install.sh` script to build and configure a rocketpool node.
 ```
-scripts/quick-install.sh
+$ ./scripts/quick-install.sh -h
+usage: bash ./scripts/quick-install.sh -a -y
+-a    | --apply      This flag is required to deploy rocketpool.  Default action is 'plan'.
+-d    | --dir        This sets the local workstation virtualenv install directory.
+                     Default is '/home/jwitkowski/.virtualenvs/cloudstruct-rocketpool'
+-h    | --help       Brings up this menu
+-p    | --pool       Specify pool name.  Defaults to mainnet-00
+-r    | --reinstall  By default this script will not re-install local workstation packages.  Set this to override that.
+-y    | --yes        This answers 'yes' to all prompts automatically.
+                     Without this flag manual acceptance/response is required during deployment.
 ```
 
 ### Obtain Private SSH Key
@@ -38,7 +49,7 @@ If you set the config to generate an SSH key for you via AWS then you can use th
 - creates iam roles for rocketpool node ec2 instance to use (re-attach EBS, re-attach EIP, use deployment s3 bucket) as instance profile
 - creates single-instance ASG with launch template for self-healing.
 - Add user-data to launch-template to download ansible code from s3 and run at first-boot
-- ansible will security harden instance, update packages, and install rocketpool (reboot if required)
+- ansible will harden the instance, update packages, and install rocketpool (reboot if required)
 - add cloudwatch alarms (slack alerts exist, email alerts coming soon) to the ASG+EC2 instance
 - Create required security groups and lock down SSH+Grafana to ip-whitelist including option to dyamically add IP of executing workstation
 - Installs rocketpool and node-exporter grafana dashboards
