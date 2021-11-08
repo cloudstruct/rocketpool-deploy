@@ -57,6 +57,6 @@ pushd /root/cloudstruct-rocketpool-deploy
 /root/.venv/bin/pip -q --no-input install -r requirements.txt
 pushd /root/cloudstruct-rocketpool-deploy/ansible
 /root/.venv/bin/ansible-galaxy install -r requirements.yml -f
-/root/.venv/bin/ansible-playbook site.yml -e "POOL=${rocketpool_pool}" -e "NODE=${node_key}" 
+/root/.venv/bin/ansible-playbook site.yml -e "POOL=${rocketpool_pool}"
 popd
 popd

@@ -6,7 +6,10 @@
   include_tasks: system.yml
 
 - name: Main | Include Firewall tasks
-  include_tasks: firewall.yml
-
-
-
+  include_tasks:
+    file: firewall.yml
+    apply:
+      tags:
+        - firewall
+  tags:
+    - firewall

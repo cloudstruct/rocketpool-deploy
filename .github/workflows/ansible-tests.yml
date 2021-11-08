@@ -55,7 +55,6 @@ jobs:
       - name: Install Ansible-Galaxy dependencies
         id: ansible-galaxy-install
         run: ansible-galaxy install -r requirements.yml
-        if: steps.cache-ansible.outputs.cache-hit != 'true'
 
       - name: Lint Ansible Playbook
         id: ansible-lint
@@ -63,4 +62,4 @@ jobs:
 
       - name: Run playbook
         id: ansible-playbook
-        run: ansible-playbook site.yml -e "POOL=mainnet-00" -e "NODE=core0" --skip-tags 'skipci'
+        run: ansible-playbook site.yml -e "POOL=mainnet-00" --skip-tags 'skipci'

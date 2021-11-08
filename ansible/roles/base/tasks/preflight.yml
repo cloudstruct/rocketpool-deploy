@@ -3,6 +3,13 @@
   assert:
     that:
       - POOL | default(False)
-      - NODE | default(False)
     fail_msg:
-      - "ERROR: POOL ('{{ POOL }}') or NODE ('{{ NODE }}') is not defined"
+      - "ERROR: POOL ('{{ POOL }}') is not defined"
+
+- name: Preflight | Check system parameters
+  assert:
+    that:
+      - (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11 ) or
+        ( ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 16 )
+    fail_msg:
+      - "ERROR: Unsupported operating system."

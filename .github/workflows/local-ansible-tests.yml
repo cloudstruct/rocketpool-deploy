@@ -1,0 +1,49 @@
+name: Local-Ansible-Tests
+
+env:
+  ANSIBLE_ROLES_PATH: "~/.ansible/roles:/etc/ansible/roles"
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/local-ansible-tests.yml'
+      - 'ansible/**'
+      - 'vars/**'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pool:
+          - mainnet-00
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: x64
+
+      - uses: actions/cache@v2
+        name: Cache dir
+        id: cache-python
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ matrix.pool }}-${{ env.pythonLocation }}
+
+      - uses: actions/cache@v2
+        name: Cache dir
+        id: cache-ansible
+        with:
+          path: "~/.ansible"
+          key: ${{ matrix.pool }}-ansible-${{ hashFiles('**/requirements.yml') }}
+
+      - name: Run local-ansible-install.sh
+        id: ansible-install
+        run: ./scripts/local-ansible-install.sh -e "skipci" -s
