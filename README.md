@@ -11,7 +11,8 @@ The reasons someone might want to use this repo are:
 
 ## Known limitations
 - Currently only built for AWS
-- Currently only supports Prsym as ETH2 validator
+- Currently only supports `Prsym` as ETH2 validator
+- Currently only supports `Debian >= 11` or `Ubuntu >= 16`
 
 ## Pre-requisites
 - An AWS Account and AWS Access & Secret key credentials setup and ready to use
@@ -62,6 +63,47 @@ If you set the config to generate an SSH key for you via AWS then you can use th
 - Create required security groups and lock down SSH+Grafana to ip-whitelist including option to dyamically add IP of executing workstation
 - Installs rocketpool and node-exporter grafana dashboards
 
+# Local Ansible Run
+This installation method only requires command line access to an Ubuntu/Debian server and the internet.  It does not use AWS.
+
+## Why?
+Why would someone want to use this to automate their local server?
+The reasons someone might want to use the local ansible install method:
+* Automated OS security hardening following industry best practices.
+* Much faster than a manual installation
+* Easily roll forward and backwards between versions
+* You do not want to concern yourself with tracking the CHANGELOG of rocketpool repos and responding accordingly. 
+* You would like to leverage the experience and knowledge of a company filled with experts doing DevOps As A Service (CloudStruct)
+
+## Pre-requisites
+- Access to an Ubuntu or Debian CLI and sudo privileges.
+
+## Pre-Install Notes
+Take a look at and edit the following files as desired. The comments should provide context.
+- [vars/defaults.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/defaults.yaml)
+- [vars/pools/mainnet-00/node.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/node.yaml)
+- [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml)
+
+The latest supported version can always be found [Here](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml#L7).
+
+*It is strongly advised to keep make copy of the `mainnet-00` directory into `mainnet-01` and edit your settings there.  This will make future upgrades much easier.*
+
+## Install Notes
+Execute the `./scripts/quick-install.sh` script to build and configure a rocketpool node.
+```
+$ ./scripts/local-ansible-install.sh -h
+usage: bash ./scripts/local-ansible-install.sh -s
+-h    | --help         Brings up this menu
+-e    | --exclude      Comma separated value of actions to exclude.
+                       Current options: ['firewall','reboot','rocketpool','security','ssh']
+-p    | --pool         Specify pool name.  Defaults to mainnet-00
+-r    | --reinstall    By default this script will not re-install local workstation packages.  Set this to override that.
+-s    | --system-setup This flag requires sudo privileges.  It installs python3-venv and all dependencies on the system.
+
+cp -R vars/pools/mainnet-00 vars/pools/mainnet-01
+./scripts/local-ansible-install.sh -s -p mainnet-01
+```
+
 # Credit
-- @tedsteen https://github.com/tedsteen/rocketpool for ansible galaxy and role inspiration
+- @tedsteen https://github.com/tedsteen/rocketpool for initial inspiration
 - @cloudstruct team for initial terraform code and layout
