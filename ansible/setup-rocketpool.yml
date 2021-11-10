@@ -10,7 +10,13 @@
   pre_tasks:
     - name: "Playbook | Set rocketpool_arch fact"
       set_fact:
-        rocketpool_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+        rocketpool_arch: 'amd64'
+      when: ansible_architecture == 'x86_64'
+
+    - name: "Playbook | Set rocketpool_arch fact"
+      set_fact:
+        rocketpool_arch: 'arm64'
+      when: ansible_architecture == 'aarch64'
 
     - name: "Playbook | Download rocketpool binary '{{ rocketpool.version }}'"
       get_url:

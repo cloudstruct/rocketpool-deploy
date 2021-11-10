@@ -10,7 +10,17 @@ set -e
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 export REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
 export TOOLS_YAML="${REPO_DIR}/vars/tools.yaml"
+export TOOLS_ARCH=$(uname -i)
 
+if [[ "$TOOLS_ARCH" == "x86_64" ]]; then
+  export TOOLS_ARCH="amd64"
+elif [[ "$TOOLS_ARCH" == "aarch64" ]]; then
+  export TOOLS_ARCH="arm64"
+else
+  echo "ERROR: Hardware architecture not supported."
+  exit 1
+fi
+ 
 # User can specify virtualenv path
 VIRTUAL_ENV_PATH="${1:-~/.virtualenvs/cloudstruct-rocketpool}"
 TMPDIR=$(mktemp -d /tmp/rocketpooltmp-XXXXXXX) || { echo "Failed to create temp file"; exit 1; }
@@ -19,7 +29,9 @@ installYQ (){
   # Grab YQ version
   YQ_VERSION=$(egrep "^yq:$" vars/tools.yaml -A2 | grep "version" | awk '{print $2}')
   YQ_URL=$(egrep "^yq:$" vars/tools.yaml -A2 | grep "url" | awk '{ print $2}')
-  wget -q ${YQ_URL/VERSION/${YQ_VERSION}} -O ${VIRTUAL_ENV_PATH}/bin/yq
+  YQ_URL_VERSION="${YQ_URL/VERSION/${YQ_VERSION}}"
+  YQ_URL_ARCH="${YQ_URL_VERSION/ARCH/${TOOLS_ARCH}}"
+  wget -q "$YQ_URL_ARCH" -O "${VIRTUAL_ENV_PATH}/bin/yq"
   chmod +x ${VIRTUAL_ENV_PATH}/bin/yq
 }
 
@@ -39,8 +51,8 @@ installTerraform (){
   TERRAFORM_CURRENT=$(terraform version -json | jq '.terraform_version' -r 2>/dev/null)
   if [[ "$TERRAFORM_CURRENT" != "${TERRAFORM_VERSION}" ]]; then
     echo "INFO: Grabbing terraform from ${TERRAFORM_URL}..."
-    wget -q "${TERRAFORM_URL}" -O "${TMPDIR}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
-    unzip "${TMPDIR}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -d "${VIRTUAL_ENV_PATH}/bin"
+    wget -q "${TERRAFORM_URL}" -O "${TMPDIR}/terraform_${TERRAFORM_VERSION}_linux_${TOOLS_ARCH}.zip"
+    unzip "${TMPDIR}/terraform_${TERRAFORM_VERSION}_linux_${TOOLS_ARCH}.zip" -d "${VIRTUAL_ENV_PATH}/bin"
     chmod +x "${VIRTUAL_ENV_PATH}/bin/terraform"
     rm -rf "${TMPDIR}"
   else
