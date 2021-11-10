@@ -27,8 +27,8 @@
     - { 'dst': "/usr/share/rp-version-check.sh" , 'src': 'rp-version-check.sh' }
     - { 'dst': "/usr/share/apt-metrics.sh" , 'src': 'apt-metrics.sh' }
     - { 'dst': "/etc/apt/apt.conf.d/60prometheus-metrics" , 'src': 'apt-prometheus-metrics', 'mode': '0644' }
-    - { 'dst': "{{ prometheus.data_path }}/var/lib/grafana/dashboards/node-exporter-dashboard.json" , 'src': 'node-exporter-dashboard.json', 'mode': '0666' }
-    - { 'dst': "{{ prometheus.data_path }}/var/lib/grafana/dashboards/rocketpool-prysm-dashboard.json" , 'src': 'rocketpool-prysm-dashboard.json', 'mode': '0666' }
+    - { 'dst': "{{ grafana.data_path }}/var/lib/grafana/dashboards/node-exporter-dashboard.json" , 'src': 'node-exporter-dashboard.json', 'mode': '0666' }
+    - { 'dst': "{{ grafana.data_path }}/var/lib/grafana/dashboards/rocketpool-prysm-dashboard.json" , 'src': 'rocketpool-prysm-dashboard.json', 'mode': '0666' }
     - { 'dst': "{{ rocketpool_user_home }}/.rocketpool/grafana-dashboards.yml", 'src': 'grafana-dashboards.yml', 'mode': '0644' }
   loop_control:
     loop_var: 'static_file'
