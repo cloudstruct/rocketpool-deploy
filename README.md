@@ -10,8 +10,7 @@ The reasons someone might want to use this repo are:
 * You would like to leverage the experience and knowledge of a company filled with experts doing DevOps As A Service (CloudStruct)
 
 ## Known limitations
-- Currently only built for AWS
-- Currently only supports `Prsym` as ETH2 validator
+- Currently only built for AWS or local servers.
 - Currently only supports `Debian >= 11` or `Ubuntu >= 16`
 
 ## Pre-requisites
