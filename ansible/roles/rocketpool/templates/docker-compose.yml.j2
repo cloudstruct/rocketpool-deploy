@@ -58,7 +58,9 @@ services:
       - ENABLE_METRICS=${ENABLE_METRICS}
       - ETH2_METRICS_PORT=${ETH2_METRICS_PORT}
       - EXTERNAL_IP=${EXTERNAL_IP}
-      - ETH2_CHECKPOINT_SYNC_URL=${ETH2_CHECKPOINT_SYNC_URL}
+{% if eth.eth2.checkpoint_sync_url | default(False) %}
+      - ETH2_CHECKPOINT_SYNC_URL={{ eth.eth2.checkpoint_sync_url }}
+{% endif %}
     entrypoint: sh
     command: "/setup/start-beacon.sh"
     depends_on:
@@ -70,7 +72,7 @@ services:
     security_opt:
       - no-new-privileges
   validator:
-    image: {{ eth.prysm.validator.image | default('${VALIDATOR_IMAGE}') }}
+    image: {{ eth.validator.image | default('${VALIDATOR_IMAGE}') }}
     user: root
     container_name: ${COMPOSE_PROJECT_NAME}_validator
     restart: unless-stopped

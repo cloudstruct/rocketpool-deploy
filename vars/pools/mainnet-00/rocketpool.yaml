@@ -18,28 +18,43 @@ grafana:
 eth:
   network: 'mainnet'
   eth1:
+    # Supports: ['geth']
     client: 'geth'
+
     # Where to store ETH1 persistent data. (/data is EBS volume mount location)
     client_data_path: "/data/eth1/mainnet/"
+
     # Override ETH1 client docker image version
     # image: ethereum/client-go:v1.10.11
+
+    # ETH1 container port
     port: '30303'
     
   eth2:
-    # Currently only supports `prysm'
-    client: 'prysm'
+    # Supports: ['prysm','teku','lighthouse','nimbus']
+    client: 'lighthouse'
+
     # Where to store ETH2 persistent data. (/data is EBS volume mount location)
     client_data_path: "/data/eth2/mainnet/"
+
+    # If you would like to instantly sync using an existing Beacon node, enter its URL here
+    # This option only exists with lighthouse and teku
+    # checkpoint_sync_url:
+
     # If you have a fallback web3 provider, specify it here.
     # fallback_web3provider: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60f86d5a331f6d0034c9ce37'
+
     # Override ETH1 client docker image version
     # image: prysmaticlabs/prysm-beacon-chain:HEAD-a80b1c-debug #v2.0.2
+
+    # Set client max peers
     # max_peers: 50
+
+    # ETH2 container port
     port: '9001'
 
-#  prysm:
-#    validator:
-#      image: prysmaticlabs/prysm-validator:HEAD-a80b1c-debug #v2.0.2
+# validator:
+#   image: prysmaticlabs/prysm-validator:HEAD-a80b1c-debug #v2.0.2
 
 prometheus:
   # https://github.com/prometheus/prometheus/releases
