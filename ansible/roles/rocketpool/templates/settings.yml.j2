@@ -1,8 +1,15 @@
 chains:
   eth1:
+{% if ((eth.eth1.provider | default('')) | length > 0) and ((eth.eth1.wsProvider | default('')) | length > 0) %}
+    provider: {{ eth.eth1.provider }}
+    wsProvider: {{ eth.eth1.wsProvider }}
+{% endif %}
     client:
       selected: {{ eth.eth1.client }}
   eth2:
+{% if ((eth.eth2.provider | default('')) | length > 0) %}
+    provider: {{ eth.eth2.provider }}
+{% endif %}
     client:
       selected: {{ eth.eth2.client }}
 

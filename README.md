@@ -1,7 +1,25 @@
-# CloudStruct Rocketpool Terraform and Ansible
+# CloudStruct Rocketpool Deployment Automation
+- [CloudStruct Rocketpool Deployment Automation](#cloudstruct-rocketpool-deployment-automation)
+  * [AWS / Terraform and Ansible](#aws---terraform-and-ansible)
+    + [Why?](#why-)
+    + [Known limitations](#known-limitations)
+    + [Pre-requisites](#pre-requisites)
+    + [Pre-Install Notes](#pre-install-notes)
+    + [Install Notes](#install-notes)
+      - [Obtain Private SSH Key](#obtain-private-ssh-key)
+    + [What does it do?](#what-does-it-do-)
+  * [Local Ansible Run](#local-ansible-run)
+    + [Why?](#why--1)
+    + [Pre-requisites](#pre-requisites-1)
+    + [Pre-Install Notes](#pre-install-notes-1)
+    + [Install Notes](#install-notes-1)
+  * [Hybrid Mode](#hybrid-mode)
+  * [Credit](#credit)
+
+## AWS / Terraform and Ansible
 Automation to deploy/manage a Rocketpool Ethereum staking pool node
 
-## Why?
+### Why?
 You may be asking why does this repo exist?  Rocketpool already has a fantastic install guide, docker containers, docker-compose setup, etc.
 The reasons someone might want to use this repo are:
 * Production level deployment (Things like uptime, self-healing, monitoring, notifications for monitoring, and repeatability)
@@ -9,15 +27,15 @@ The reasons someone might want to use this repo are:
 * You do not want to concern yourself with constantly maintaining and updating your node
 * You would like to leverage the experience and knowledge of a company filled with experts doing DevOps As A Service (CloudStruct)
 
-## Known limitations
+### Known limitations
 - Currently only built for AWS or local servers.
 - Currently only supports `Debian >= 11` or `Ubuntu >= 16`
 
-## Pre-requisites
+### Pre-requisites
 - An AWS Account and AWS Access & Secret key credentials setup and ready to use
 - An ubuntu CLI which has python3, python3-pip, and python3-venv installed.
 
-## Pre-Install Notes
+### Pre-Install Notes
 Take a look at and edit the following files as desired. The comments should provide context.
 - [vars/defaults.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/defaults.yaml)
 - [vars/pools/mainnet-00/aws.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/aws.yaml)
@@ -26,7 +44,7 @@ Take a look at and edit the following files as desired. The comments should prov
 
 The latest supported version can always be found [Here](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml#L7).
 
-## Install Notes
+### Install Notes
 Execute the `./scripts/quick-install.sh` script to build and configure a rocketpool node.
 ```
 $ ./scripts/quick-install.sh -h
@@ -41,11 +59,11 @@ usage: bash ./scripts/quick-install.sh -a -y
                      Without this flag manual acceptance/response is required during deployment.
 ```
 
-### Obtain Private SSH Key
+#### Obtain Private SSH Key
 If you set the config to generate an SSH key for you via AWS then you can use the following command to retrieve this key from the encrypted s3 bucket.
 `terraform output -json | jq '.ssh_private_key.value' -r`
 
-## What does it do?
+### What does it do?
 - Performs environment checks/pre-execution validation
 - Creates a python3 virtual environment and installs required software
 - Runs the terraform bootstrap to setup object storage for state file and dynamodb for state locking
@@ -62,10 +80,10 @@ If you set the config to generate an SSH key for you via AWS then you can use th
 - Create required security groups and lock down SSH+Grafana to ip-whitelist including option to dyamically add IP of executing workstation
 - Installs rocketpool and node-exporter grafana dashboards
 
-# Local Ansible Run
+## Local Ansible Run
 This installation method only requires command line access to an Ubuntu/Debian server and the internet.  It does not use AWS.
 
-## Why?
+### Why?
 Why would someone want to use this to automate their local server?
 The reasons someone might want to use the local ansible install method:
 * Automated OS security hardening following industry best practices.
@@ -74,10 +92,10 @@ The reasons someone might want to use the local ansible install method:
 * You do not want to concern yourself with tracking the CHANGELOG of rocketpool repos and responding accordingly. 
 * You would like to leverage the experience and knowledge of a company filled with experts doing DevOps As A Service (CloudStruct)
 
-## Pre-requisites
+### Pre-requisites
 - Access to an Ubuntu or Debian CLI and sudo privileges.
 
-## Pre-Install Notes
+### Pre-Install Notes
 Take a look at and edit the following files as desired. The comments should provide context.
 - [vars/defaults.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/defaults.yaml)
 - [vars/pools/mainnet-00/node.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/node.yaml)
@@ -87,7 +105,7 @@ The latest supported version can always be found [Here](https://github.com/cloud
 
 *It is strongly advised to keep make copy of the `mainnet-00` directory into `mainnet-01` and edit your settings there.  This will make future upgrades much easier.*
 
-## Install Notes
+### Install Notes
 Execute the `./scripts/quick-install.sh` script to build and configure a rocketpool node.
 ```
 $ ./scripts/local-ansible-install.sh -h
@@ -103,6 +121,9 @@ cp -R vars/pools/mainnet-00 vars/pools/mainnet-01
 ./scripts/local-ansible-install.sh -s -p mainnet-01
 ```
 
-# Credit
+## Hybrid Mode
+[Hybrid mode](https://docs.rocketpool.net/guides/node/hybrid.html) is supported.  To enable simply fill out the appropriate values in [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml) for ETH1 `eth.eth1.provider` and `eth.eth1.wsProvider` and/or for ETH2 `eth.eth2.provider`. 
+
+## Credit
 - @tedsteen https://github.com/tedsteen/rocketpool for initial inspiration
 - @cloudstruct team for initial terraform code and layout
