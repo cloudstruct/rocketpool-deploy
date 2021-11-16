@@ -30,6 +30,11 @@ eth:
     # ETH1 container port
     port: '30303'
     
+    # Set these if using rocketpool hybrid setup for ETH1
+    # https://docs.rocketpool.net/guides/node/hybrid.html#setting-up-an-external-eth1-client
+    provider: ""
+    wsProvider: ""
+
   eth2:
     # Supports: ['prysm','teku','lighthouse','nimbus']
     client: 'lighthouse'
@@ -52,6 +57,10 @@ eth:
 
     # ETH2 container port
     port: '9001'
+
+    # Set this if using rocketpool hybrid setup for ETH2
+    # https://docs.rocketpool.net/guides/node/hybrid.html#setting-up-an-external-eth2-client
+    provider: ""
 
 # validator:
 #   image: prysmaticlabs/prysm-validator:HEAD-a80b1c-debug #v2.0.2

@@ -1,14 +1,36 @@
 ---
-- name: Rocketpool Post Install | Check open ports
+- name: Rocketpool Post Install | Check ETH1 port
   wait_for:
     host: 0.0.0.0
-    port: "{{ port }}"
+    port: "{{ eth1port }}"
     timeout: 300
-    delay: 15
+    delay: 2
+  when: ((eth.eth1.provider | default('')) | length == 0) or ((eth.eth1.wsProvider | default('') | length == 0)
+  loop:
+    - "{{ eth.eth1.port }}"
+  loop_control:
+    loop_var: 'eth1port'
+
+- name: Rocketpool Post Install | Check ETH2 port
+  wait_for:
+    host: 0.0.0.0
+    port: "{{ eth2port }}"
+    timeout: 300
+    delay: 2
+  when: ((eth.eth2.provider | default('')) | length == 0)
+  loop:
+    - "{{ eth.eth2.port }}"
+  loop_control:
+    loop_var: 'eth2port'
+
+- name: Rocketpool Post Install | Check metrics ports
+  wait_for:
+    host: 0.0.0.0
+    port: "{{ metrics_port }}"
+    timeout: 300
+    delay: 2
   loop:
     - "{{ grafana.port }}"
-    - "{{ eth.eth1.port }}"
-    - "{{ eth.eth2.port }}"
     - "{{ prometheus.node_exporter.port }}"
   loop_control:
-    loop_var: 'port'
+    loop_var: 'metrics_port'
