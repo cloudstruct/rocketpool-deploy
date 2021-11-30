@@ -5,7 +5,7 @@
     port: "{{ eth1port }}"
     timeout: 300
     delay: 2
-  when: ((eth.eth1.provider | default('')) | length == 0) or ((eth.eth1.wsProvider | default('') | length == 0)
+  when: ((eth.eth1.provider | default('')) | length == 0) or ((eth.eth1.wsProvider | default('')) | length == 0)
   loop:
     - "{{ eth.eth1.port }}"
   loop_control:
