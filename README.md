@@ -13,6 +13,7 @@
     + [Pre-requisites](#pre-requisites-1)
     + [Pre-Install Notes](#pre-install-notes-1)
     + [Install Notes](#install-notes-1)
+  * [Post Install Instructions](#post-install-instructions)
   * [Hybrid Mode](#hybrid-mode)
   * [Credit](#credit)
 
@@ -123,6 +124,11 @@ cp -R vars/pools/mainnet-00 vars/pools/mainnet-01
 
 ## Hybrid Mode
 [Hybrid mode](https://docs.rocketpool.net/guides/node/hybrid.html) is supported.  To enable simply fill out the appropriate values in [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml) for ETH1 `eth.eth1.provider` and `eth.eth1.wsProvider` and/or for ETH2 `eth.eth2.provider`. 
+
+## Post Install Instructions
+**You should always read all of the documentation.  This is not advice on avoiding that.**
+After the installation you should return to the official Rocketpool documentation.  This will leave you off with needing to setup your wallet, stake your RPL, and then deposit.
+At the time of this writing it should leave you off right about [Here](https://docs.rocketpool.net/guides/node/starting-rp.html).
 
 ## Credit
 - @tedsteen https://github.com/tedsteen/rocketpool for initial inspiration
