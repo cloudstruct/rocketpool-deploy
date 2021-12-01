@@ -52,7 +52,7 @@ $ ./scripts/quick-install.sh -h
 usage: bash ./scripts/quick-install.sh -a -y
 -a    | --apply      This flag is required to deploy rocketpool.  Default action is 'plan'.
 -d    | --dir        This sets the local workstation virtualenv install directory.
-                     Default is '/home/jwitkowski/.virtualenvs/cloudstruct-rocketpool'
+                     Default is '~/.virtualenvs/cloudstruct-rocketpool'
 -h    | --help       Brings up this menu
 -p    | --pool       Specify pool name.  Defaults to mainnet-00
 -r    | --reinstall  By default this script will not re-install local workstation packages.  Set this to override that.
