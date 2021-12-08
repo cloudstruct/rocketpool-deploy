@@ -5,7 +5,7 @@ rocketpool:
   user: 'rp'
   uid: '1001'
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.1.0'
+  version: 'v1.1.1'
 
 grafana:
   # Where to store grafana persistent data (/data is EBS volume mount location)
@@ -13,7 +13,7 @@ grafana:
   # Port to expose Grafana on
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '8.2.5'
+  version: '8.3.1'
 
 eth:
   network: 'mainnet'
@@ -29,7 +29,7 @@ eth:
 
     # ETH1 container port
     port: '30303'
-    
+
     # Set these if using rocketpool hybrid setup for ETH1
     # https://docs.rocketpool.net/guides/node/hybrid.html#setting-up-an-external-eth1-client
     provider: ""
@@ -74,4 +74,4 @@ prometheus:
   node_exporter:
     port: '9103'
     # https://github.com/prometheus/node_exporter/releases
-    version: 'v1.3.0'
+    version: 'v1.3.1'
