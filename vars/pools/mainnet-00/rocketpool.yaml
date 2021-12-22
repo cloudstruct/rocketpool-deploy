@@ -5,7 +5,7 @@ rocketpool:
   user: 'rp'
   uid: '1001'
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.1.2'
+  version: 'v1.1.3'
 
 grafana:
   # Where to store grafana persistent data (/data is EBS volume mount location)
@@ -13,7 +13,7 @@ grafana:
   # Port to expose Grafana on
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '8.3.2'
+  version: '8.3.3'
 
 eth:
   network: 'mainnet'
@@ -67,7 +67,7 @@ eth:
 
 prometheus:
   # https://github.com/prometheus/prometheus/releases
-  version: 'v2.31.1'
+  version: 'v2.32.1'
   # Where to store Prometheus persistent data. (/data is EBS volume mount location)
   data_path: '/data/prometheus/'
   # Node Exporter settings
