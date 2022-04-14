@@ -5,7 +5,7 @@ rocketpool:
   user: 'rp'
   uid: '1001'
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.1.3'
+  version: 'v1.3.0'
 
 grafana:
   # Where to store grafana persistent data (/data is EBS volume mount location)
@@ -13,7 +13,7 @@ grafana:
   # Port to expose Grafana on
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '8.3.3'
+  version: '8.4.6'
 
 eth:
   network: 'mainnet'
@@ -47,7 +47,7 @@ eth:
     # checkpoint_sync_url:
 
     # If you have a fallback web3 provider, specify it here.
-    # fallback_web3provider: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60f86d5a331f6d0034c9ce37'
+    # fallback_web3provider: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60f86d-INFURA-EXAMPLE-37'
 
     # Override ETH1 client docker image version
     # image: prysmaticlabs/prysm-beacon-chain:HEAD-a80b1c-debug #v2.0.2
@@ -67,7 +67,7 @@ eth:
 
 prometheus:
   # https://github.com/prometheus/prometheus/releases
-  version: 'v2.32.1'
+  version: 'v2.34.0'
   # Where to store Prometheus persistent data. (/data is EBS volume mount location)
   data_path: '/data/prometheus/'
   # Node Exporter settings

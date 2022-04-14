@@ -11,7 +11,7 @@ global:
     # docker-compose release version
     # https://github.com/docker/compose/releases
     compose:
-      version: '1.29.2'
+      version: '2.4.1'
     # Linux users to give docker daemon permissions to
     users:
       - "{{ rocketpool.user }}"

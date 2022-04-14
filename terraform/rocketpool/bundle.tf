@@ -6,6 +6,7 @@ locals {
   ]
 }
 
+# Generate script which will create tarball for upload
 data "template_file" "tar_sh" {
   template = <<EOF
 #!/bin/bash
@@ -31,5 +32,4 @@ resource "aws_s3_bucket_object" "ansible_tar_gz" {
   source     = "${path.module}/ansible-${local.rp_vars.rocketpool.version}.tar.gz"
   etag       = try(filemd5("${path.module}/ansible-${local.rp_vars.rocketpool.version}.tar.gz"), null)
   tags       = local.default_tags
-
 }

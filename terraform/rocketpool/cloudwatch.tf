@@ -10,7 +10,7 @@ locals {
 
 module "cloudwatch_metric_alarms" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarm"
-  version = "2.1"
+  version = "3.1.0"
 
   for_each = local.alerts_by_node
 

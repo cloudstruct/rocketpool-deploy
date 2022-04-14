@@ -22,7 +22,14 @@ MOUNT_DIR=/data
 
 (
 set -x
-aws ec2 attach-volume --volume-id $${VOLUME_ID} --instance-id $${INSTANCE_ID} --device /dev/sdf
+END=0
+until [ "$END" -eq 1 ]
+do
+  aws ec2 attach-volume --volume-id $${VOLUME_ID} --instance-id $${INSTANCE_ID} --device /dev/sdf
+  if [[ "$?" == 0 ]]; then
+    END=1
+  fi
+done
 )
 
 # Wait for device to show up

@@ -125,7 +125,7 @@ resource "aws_iam_role" "node" {
     policy = data.aws_iam_policy_document.s3_deploy.json
   }
 
-  # Not all nodes have a matching eip-attach policy, so this is a bit hand-wavy
+  # Not all nodes have a matching eip-attach policy, this for_each allows
   # to make it conditional
   dynamic "inline_policy" {
     for_each = {
