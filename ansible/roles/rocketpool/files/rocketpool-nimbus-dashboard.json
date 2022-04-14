@@ -25,6 +25,12 @@
     },
     {
       "type": "panel",
+      "id": "heatmap",
+      "name": "Heatmap",
+      "version": ""
+    },
+    {
+      "type": "panel",
       "id": "piechart",
       "name": "Pie chart",
       "version": ""
@@ -79,10 +85,10 @@
       }
     ]
   },
-  "description": "This is the standard dashboard for Rocket Pool node operators that use Teku.",
+  "description": "This is the standard dashboard for Rocket Pool node operators that use Nimbus.",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": 14886,
+  "gnetId": 14884,
   "graphTooltip": 0,
   "id": null,
   "links": [],
@@ -135,7 +141,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "A count of how long Teku's Beacon Chain client has been running. If you don't restart it, this is about the same as your total system uptime.",
+      "description": "A count of how long Nimbus has been running. If you don't restart it, this is about the same as your total system uptime.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -418,7 +424,11 @@
       "type": "gauge"
     },
     {
-      "description": "Tracks the activity of all of your validators on the Beacon Chain. This is a cumulative count; it starts at 0 when Prysm first starts up, and then continuously increments as it goes.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Tracks the activity of all of your validators on the Beacon Chain. This is a cumulative count; it starts at 0 when Nimbus first starts up, and then continuously increments as it goes.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -475,24 +485,16 @@
       "pluginVersion": "8.3.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(validator_successful_attestations{job=\"validator\"}) OR on() vector(0)",
+          "expr": "sum(beacon_attestations_sent_total{job=\"eth2\"}) OR on() vector(0)",
           "hide": false,
           "interval": "",
           "legendFormat": "Attestations",
           "refId": "B"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(validator_successful_proposals{job=\"validator\"}) OR on() vector(0)",
+          "expr": "sum(beacon_blocks_proposed_total{job=\"eth2\"}) OR on() vector(0)",
           "interval": "",
           "legendFormat": "Proposals",
           "refId": "A"
@@ -502,6 +504,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "Tracks the activity of all of your validators on the Beacon Chain.",
       "fieldConfig": {
         "defaults": {
@@ -573,24 +579,17 @@
       "pluginVersion": "8.1.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(rate(validator_successful_proposals{job=\"validator\"}[$__rate_interval])) * 45 OR on() vector(0)",
+          "expr": "sum(rate(beacon_blocks_proposed_total{job=\"eth2\"}[$__rate_interval])) * 45 OR on() vector(0)",
           "hide": false,
           "interval": "",
           "legendFormat": "Proposal",
           "refId": "A"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(rate(validator_successful_attestations{job=\"validator\"}[$__rate_interval])) * 45 OR on() vector(0)",
+          "expr": "sum(rate(beacon_attestations_sent_total{job=\"eth2\"}[$__rate_interval])) * 45 OR on() vector(0)",
+          "hide": false,
           "interval": "",
           "legendFormat": "Attestation",
           "refId": "B"
@@ -604,7 +603,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The total CPU usage of Teku's Beacon Chain and Validator clients combined, with respect to all cores on your CPU.",
+      "description": "The total CPU usage of Nimbus with respect to all cores on your CPU.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -664,13 +663,13 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "(sum(avg (irate(process_cpu_seconds_total{job=\"eth2\"}[$__rate_interval]))) + sum(avg (irate(process_cpu_seconds_total{job=\"validator\"}[$__rate_interval])))) * 100 / (count (node_cpu_seconds_total{job=\"node\", mode=\"idle\"}))",
+          "expr": "sum(avg (irate(process_cpu_seconds_total{job=\"eth2\"}[$__rate_interval]))) * 100 / (count (node_cpu_seconds_total{job=\"node\", mode=\"idle\"}))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Teku CPU",
+      "title": "Nimbus CPU",
       "type": "stat"
     },
     {
@@ -777,7 +776,7 @@
       "id": 82,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -808,7 +807,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The amount of RAM that the Teku Beacon Chain and Validator clients are using together.",
+      "description": "The amount of RAM that Nimbus is using.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -866,13 +865,13 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(process_resident_memory_bytes{job=\"eth2\"}) + sum(process_resident_memory_bytes{job=\"validator\"})",
+          "expr": "sum(process_resident_memory_bytes{job=\"eth2\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Teku RAM",
+      "title": "Nimbus RAM",
       "type": "stat"
     },
     {
@@ -1087,7 +1086,7 @@
         "x": 15,
         "y": 5
       },
-      "id": 233,
+      "id": 229,
       "options": {
         "colorMode": "background",
         "graphMode": "none",
@@ -1132,101 +1131,88 @@
       "type": "stat"
     },
     {
-      "description": "This tracks the inclusion distance for each of your attestations. Ideally they would all be 1, meaning the attestation was received by your peers when it was expected (the very next slot). This corresponds to a 0 on Beaconcha.in's \"Optimal Inclusion Distance\" display.\n\nIf you see a large distance, you should confirm it using a separate block explorer like https://prater.beaconcha.in.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepBefore",
-            "lineWidth": 3,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 1,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
+      "cards": {},
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "linear",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "opacity"
       },
+      "dataFormat": "tsbuckets",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "This tracks how long it took for your attestations to be sent to the Beacon Chain. Anything below 0 seconds (down to -4) is good; anything over means it took longer than the 4-second window, and your attestation may have a larger inclusion distance which could result in lower overall rewards for that attestation.",
       "gridPos": {
         "h": 5,
         "w": 5,
         "x": 17,
         "y": 6
       },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
       "id": 26,
       "interval": "",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "hidden",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
+      "legend": {
+        "show": false
       },
       "pluginVersion": "8.1.1",
+      "reverseYBuckets": true,
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "irate(validator_successful_attestations{job=\"validator\"}[$__rate_interval]) * on(pubkey) validator_inclusion_distance{job=\"validator\"} * 15",
+          "expr": "rate(beacon_attestation_sent_delay_bucket{job=\"eth2\"}[$__rate_interval])",
           "format": "time_series",
           "hide": false,
           "instant": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{le}}",
           "refId": "A"
         }
       ],
-      "title": "Attestation Inclusion Distance",
+      "title": "Attestation Delay",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
       "transformations": [
         {
-          "id": "filterByValue",
+          "id": "filterFieldsByName",
           "options": {
-            "filters": [],
-            "match": "any",
-            "type": "exclude"
+            "include": {
+              "names": [
+                "-0.05",
+                "-0.1",
+                "-0.5",
+                "-1.0",
+                "-2.0",
+                "-4.0",
+                "0.05",
+                "0.1",
+                "0.5",
+                "1.0",
+                "2.0",
+                "4.0",
+                "8.0",
+                "Time"
+              ]
+            }
           }
         }
       ],
-      "type": "timeseries"
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "format": "short",
+        "logBase": 1,
+        "show": true
+      },
+      "yBucketBound": "auto"
     },
     {
       "datasource": {
@@ -1306,7 +1292,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Teku"
+              "options": "Nimbus"
             },
             "properties": [
               {
@@ -1349,10 +1335,10 @@
         },
         {
           "exemplar": true,
-          "expr": "(sum(avg (irate(process_cpu_seconds_total{job=\"eth2\"}[$__rate_interval]))) + sum(avg (irate(process_cpu_seconds_total{job=\"validator\"}[$__rate_interval])))) * 100 / (count (node_cpu_seconds_total{job=\"node\", mode=\"idle\"}))",
+          "expr": "avg (irate(process_cpu_seconds_total{job=\"eth2\"}[$__rate_interval])) * 100 / (count (node_cpu_seconds_total{job=\"node\", mode=\"idle\"}))",
           "instant": false,
           "interval": "",
-          "legendFormat": "Teku",
+          "legendFormat": "Nimbus",
           "refId": "A"
         },
         {
@@ -1441,7 +1427,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Teku"
+              "options": "Nimbus"
             },
             "properties": [
               {
@@ -1499,10 +1485,10 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(process_resident_memory_bytes{job=\"eth2\"}) + sum(process_resident_memory_bytes{job=\"validator\"})",
+          "expr": "sum(process_resident_memory_bytes{job=\"eth2\"})",
           "hide": false,
           "interval": "",
-          "legendFormat": "Teku",
+          "legendFormat": "Nimbus",
           "refId": "C"
         }
       ],
@@ -1510,6 +1496,10 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "The time until your next attestation.",
       "fieldConfig": {
         "defaults": {
@@ -1520,6 +1510,7 @@
             {
               "options": {
                 "0": {
+                  "color": "text",
                   "index": 0,
                   "text": "None Scheduled"
                 }
@@ -1565,12 +1556,8 @@
       "pluginVersion": "8.3.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "min((validator_next_attestation_slot{job=\"validator\"} - scalar(beacon_slot{job=\"eth2\"})) > 0 - 1) * 12",
+          "expr": "next_action_wait{job=\"eth2\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1580,7 +1567,11 @@
       "type": "stat"
     },
     {
-      "description": "How many peers Prysm is currently connected to on the Beacon Chain.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "How many peers Nimbus is currently connected to on the Beacon Chain.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1597,8 +1588,8 @@
               "type": "special"
             }
           ],
-          "max": 45,
-          "min": 0,
+          "max": 160,
+          "min": -2,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1645,12 +1636,8 @@
       "pluginVersion": "8.3.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "p2p_peer_count{job=\"eth2\", state=\"Connected\"}",
+          "expr": "nbc_peers{job=\"eth2\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1660,7 +1647,11 @@
       "type": "gauge"
     },
     {
-      "description": "How many peers Prysm is currently connected to on the Beacon Chain.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "How many peers Nimbus is currently connected to for Beacon Chain traffic.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1730,12 +1721,8 @@
       "pluginVersion": "8.1.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "p2p_peer_count{job=\"eth2\", state=\"Connected\"}",
+          "expr": "nbc_peers{job=\"eth2\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "B"
@@ -1770,7 +1757,7 @@
         "x": 13,
         "y": 12
       },
-      "id": 229,
+      "id": 233,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -4071,10 +4058,6 @@
       "type": "gauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
       "description": "The average collateralisation rate for node operators across the network.",
       "fieldConfig": {
         "defaults": {
@@ -4184,7 +4167,8 @@
           ],
           "show": false
         },
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "8.3.2",
       "targets": [
@@ -4216,7 +4200,7 @@
             "indexByName": {},
             "renameByName": {
               "Value #A": "Value",
-              "instance": ""
+              "job": ""
             }
           }
         }
@@ -4309,8 +4293,8 @@
     ]
   },
   "timezone": "",
-  "title": "Rocket Pool Dashboard v1.1.0 for Prysm",
-  "uid": "Ur22GG77zPR110",
-  "version": 2,
+  "title": "Rocket Pool Dashboard v1.1.0 for Nimbus",
+  "uid": "Ur22GG77zNM110",
+  "version": 11,
   "weekStart": ""
 }

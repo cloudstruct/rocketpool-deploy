@@ -418,7 +418,11 @@
       "type": "gauge"
     },
     {
-      "description": "Tracks the activity of all of your validators on the Beacon Chain. This is a cumulative count; it starts at 0 when Prysm first starts up, and then continuously increments as it goes.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Tracks the activity of all of your validators on the Beacon Chain. This is a cumulative count; it starts at 0 when Teku first starts up, and then continuously increments as it goes.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -475,24 +479,16 @@
       "pluginVersion": "8.3.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(validator_successful_attestations{job=\"validator\"}) OR on() vector(0)",
+          "expr": "validator_duties_performed{job=\"validator\", type=\"attestation\", result=\"success\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "Attestations",
           "refId": "B"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(validator_successful_proposals{job=\"validator\"}) OR on() vector(0)",
+          "expr": "validator_duties_performed{job=\"validator\", type=\"block\", result=\"success\"}",
           "interval": "",
           "legendFormat": "Proposals",
           "refId": "A"
@@ -502,6 +498,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "Tracks the activity of all of your validators on the Beacon Chain.",
       "fieldConfig": {
         "defaults": {
@@ -573,24 +573,16 @@
       "pluginVersion": "8.1.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(rate(validator_successful_proposals{job=\"validator\"}[$__rate_interval])) * 45 OR on() vector(0)",
+          "expr": "rate(validator_duties_performed{job=\"validator\", type=\"block\", result=\"success\"}[$__rate_interval]) * 45",
           "hide": false,
           "interval": "",
           "legendFormat": "Proposal",
           "refId": "A"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "sum(rate(validator_successful_attestations{job=\"validator\"}[$__rate_interval])) * 45 OR on() vector(0)",
+          "expr": "rate(validator_duties_performed{job=\"validator\", type=\"attestation\", result=\"success\"}[$__rate_interval]) * 45",
           "interval": "",
           "legendFormat": "Attestation",
           "refId": "B"
@@ -1132,7 +1124,11 @@
       "type": "stat"
     },
     {
-      "description": "This tracks the inclusion distance for each of your attestations. Ideally they would all be 1, meaning the attestation was received by your peers when it was expected (the very next slot). This corresponds to a 0 on Beaconcha.in's \"Optimal Inclusion Distance\" display.\n\nIf you see a large distance, you should confirm it using a separate block explorer like https://prater.beaconcha.in.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "This tracks the average inclusion distance for your attestations - a distance of 1 means your attestations were sent as quickly as possible to the network and arrived on time. Anything larger than 1 and you might have a small penalty for being late.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1143,15 +1139,15 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 100,
+            "fillOpacity": 70,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "stepBefore",
-            "lineWidth": 3,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -1166,7 +1162,6 @@
               "mode": "off"
             }
           },
-          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1174,6 +1169,10 @@
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           }
@@ -1201,12 +1200,8 @@
       "pluginVersion": "8.1.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "irate(validator_successful_attestations{job=\"validator\"}[$__rate_interval]) * on(pubkey) validator_inclusion_distance{job=\"validator\"} * 15",
+          "expr": "validator_performance_inclusion_distance_average{job=\"eth2\"}",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -1215,17 +1210,8 @@
           "refId": "A"
         }
       ],
-      "title": "Attestation Inclusion Distance",
-      "transformations": [
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [],
-            "match": "any",
-            "type": "exclude"
-          }
-        }
-      ],
+      "title": "Average Inclusion Distance",
+      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -1510,7 +1496,11 @@
       "type": "timeseries"
     },
     {
-      "description": "The time until your next attestation.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "How many attestations are currently scheduled for your validators.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1536,7 +1526,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "none"
         },
         "overrides": []
       },
@@ -1565,22 +1555,22 @@
       "pluginVersion": "8.3.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "min((validator_next_attestation_slot{job=\"validator\"} - scalar(beacon_slot{job=\"eth2\"})) > 0 - 1) * 12",
+          "expr": "validator_scheduled_attestation_duties_current{job=\"validator\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Next Attestation",
+      "title": "Next Attestations",
       "type": "stat"
     },
     {
-      "description": "How many peers Prysm is currently connected to on the Beacon Chain.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "How many peers Teku is currently connected to on the Beacon Chain.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1597,7 +1587,7 @@
               "type": "special"
             }
           ],
-          "max": 45,
+          "max": 74,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -1645,12 +1635,8 @@
       "pluginVersion": "8.3.2",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "p2p_peer_count{job=\"eth2\", state=\"Connected\"}",
+          "expr": "beacon_peer_count{job=\"eth2\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1660,7 +1646,11 @@
       "type": "gauge"
     },
     {
-      "description": "How many peers Prysm is currently connected to on the Beacon Chain.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "How many peers Teku is currently connected to for Beacon Chain traffic.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1730,12 +1720,8 @@
       "pluginVersion": "8.1.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
           "exemplar": true,
-          "expr": "p2p_peer_count{job=\"eth2\", state=\"Connected\"}",
+          "expr": "beacon_peer_count{job=\"eth2\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "B"
@@ -4309,8 +4295,8 @@
     ]
   },
   "timezone": "",
-  "title": "Rocket Pool Dashboard v1.1.0 for Prysm",
-  "uid": "Ur22GG77zPR110",
-  "version": 2,
+  "title": "Rocket Pool Dashboard v1.1.0 for Teku",
+  "uid": "Ur22GG77zTK110",
+  "version": 3,
   "weekStart": ""
 }

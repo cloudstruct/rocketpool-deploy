@@ -25,6 +25,12 @@
     },
     {
       "type": "panel",
+      "id": "heatmap",
+      "name": "Heatmap",
+      "version": ""
+    },
+    {
+      "type": "panel",
       "id": "piechart",
       "name": "Pie chart",
       "version": ""
@@ -418,7 +424,7 @@
       "type": "gauge"
     },
     {
-      "description": "Tracks the activity of all of your validators on the Beacon Chain. This is a cumulative count; it starts at 0 when Prysm first starts up, and then continuously increments as it goes.",
+      "description": "Tracks the activity of all of your validators on the Beacon Chain. This is a cumulative count; it starts at 0 when Lighthouse first starts up, and then continuously increments as it goes.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -480,7 +486,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(validator_successful_attestations{job=\"validator\"}) OR on() vector(0)",
+          "expr": "sum(vc_signed_attestations_total{job=\"validator\", status=\"success\"} or vector(0))",
           "hide": false,
           "interval": "",
           "legendFormat": "Attestations",
@@ -492,7 +498,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(validator_successful_proposals{job=\"validator\"}) OR on() vector(0)",
+          "expr": "sum(vc_signed_beacon_blocks_total{job=\"validator\", status=\"success\"} or vector(0))",
           "interval": "",
           "legendFormat": "Proposals",
           "refId": "A"
@@ -578,7 +584,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(validator_successful_proposals{job=\"validator\"}[$__rate_interval])) * 45 OR on() vector(0)",
+          "expr": "sum(rate(vc_signed_beacon_blocks_total{job=\"validator\", status=\"success\"}[$__rate_interval]) or vector(0)) * 45",
           "hide": false,
           "interval": "",
           "legendFormat": "Proposal",
@@ -590,7 +596,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(validator_successful_attestations{job=\"validator\"}[$__rate_interval])) * 45 OR on() vector(0)",
+          "expr": "sum(rate(vc_signed_attestations_total{job=\"validator\", status=\"success\"}[$__rate_interval]) or vector(0)) * 45",
           "interval": "",
           "legendFormat": "Attestation",
           "refId": "B"
@@ -604,7 +610,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The total CPU usage of Teku's Beacon Chain and Validator clients combined, with respect to all cores on your CPU.",
+      "description": "The total CPU usage of Lighthouse's Beacon Chain and Validator clients combined, with respect to all cores on your CPU.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -670,7 +676,7 @@
           "refId": "A"
         }
       ],
-      "title": "Teku CPU",
+      "title": "Lighthouse CPU",
       "type": "stat"
     },
     {
@@ -808,7 +814,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The amount of RAM that the Teku Beacon Chain and Validator clients are using together.",
+      "description": "The amount of RAM that the Lighthouse Beacon Chain and Validator clients are using together.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -872,7 +878,7 @@
           "refId": "A"
         }
       ],
-      "title": "Teku RAM",
+      "title": "Lighthouse RAM",
       "type": "stat"
     },
     {
@@ -1132,73 +1138,32 @@
       "type": "stat"
     },
     {
-      "description": "This tracks the inclusion distance for each of your attestations. Ideally they would all be 1, meaning the attestation was received by your peers when it was expected (the very next slot). This corresponds to a 0 on Beaconcha.in's \"Optimal Inclusion Distance\" display.\n\nIf you see a large distance, you should confirm it using a separate block explorer like https://prater.beaconcha.in.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepBefore",
-            "lineWidth": 3,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 1,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
+      "cards": {},
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "opacity"
       },
+      "dataFormat": "tsbuckets",
+      "description": "This tracks the delay between when you sent an attestation and your peers on the Beacon Chain network reported receiving it. Ideally, you want most of them to report that they received it within 4 seconds - otherwise you may be penalized for being late.",
       "gridPos": {
         "h": 5,
         "w": 5,
         "x": 17,
         "y": 6
       },
+      "heatmap": {},
+      "hideZeroBuckets": false,
+      "highlightCards": true,
       "id": 26,
       "interval": "",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "hidden",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
+      "legend": {
+        "show": false
       },
       "pluginVersion": "8.1.1",
+      "reverseYBuckets": true,
       "targets": [
         {
           "datasource": {
@@ -1206,27 +1171,31 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "irate(validator_successful_attestations{job=\"validator\"}[$__rate_interval]) * on(pubkey) validator_inclusion_distance{job=\"validator\"} * 15",
+          "expr": "sum(rate(validator_monitor_attestation_in_aggregate_delay_seconds_bucket{job=\"eth2\", src=\"gossip\"}[$__rate_interval])) without (validator)",
           "format": "time_series",
           "hide": false,
           "instant": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{le}}",
           "refId": "A"
         }
       ],
-      "title": "Attestation Inclusion Distance",
-      "transformations": [
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [],
-            "match": "any",
-            "type": "exclude"
-          }
-        }
-      ],
-      "type": "timeseries"
+      "title": "Attestation Delay",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "transformations": [],
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "format": "s",
+        "logBase": 1,
+        "show": true
+      },
+      "yBucketBound": "auto"
     },
     {
       "datasource": {
@@ -1510,7 +1479,7 @@
       "type": "timeseries"
     },
     {
-      "description": "The time until your next attestation.",
+      "description": "The time until your next attestation.\n\n**NOTE: Lighthouse does not currently expose this metric, so this is a placeholder until its developers add it.**",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1519,12 +1488,14 @@
           "mappings": [
             {
               "options": {
-                "0": {
+                "match": "null",
+                "result": {
+                  "color": "text",
                   "index": 0,
-                  "text": "None Scheduled"
+                  "text": "Not Implemented"
                 }
               },
-              "type": "value"
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -1536,7 +1507,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "none"
         },
         "overrides": []
       },
@@ -1570,7 +1541,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "min((validator_next_attestation_slot{job=\"validator\"} - scalar(beacon_slot{job=\"eth2\"})) > 0 - 1) * 12",
+          "expr": "",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1580,7 +1551,7 @@
       "type": "stat"
     },
     {
-      "description": "How many peers Prysm is currently connected to on the Beacon Chain.",
+      "description": "How many peers Lighthouse is currently connected to on the Beacon Chain.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1597,7 +1568,7 @@
               "type": "special"
             }
           ],
-          "max": 45,
+          "max": 50,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -1650,7 +1621,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "p2p_peer_count{job=\"eth2\", state=\"Connected\"}",
+          "expr": "sum(sync_peers_per_status{job=\"eth2\", sync_status=~\"Synced|Advanced\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1660,7 +1631,7 @@
       "type": "gauge"
     },
     {
-      "description": "How many peers Prysm is currently connected to on the Beacon Chain.",
+      "description": "How many peers Lighthouse is currently connected to for Beacon Chain traffic.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1735,7 +1706,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "p2p_peer_count{job=\"eth2\", state=\"Connected\"}",
+          "expr": "sum(sync_peers_per_status{job=\"eth2\", sync_status=~\"Synced|Advanced\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "B"
@@ -4309,8 +4280,8 @@
     ]
   },
   "timezone": "",
-  "title": "Rocket Pool Dashboard v1.1.0 for Prysm",
-  "uid": "Ur22GG77zPR110",
-  "version": 2,
+  "title": "Rocket Pool Dashboard v1.1.0 for Lighthouse",
+  "uid": "Ur22GG77zLH110",
+  "version": 3,
   "weekStart": ""
 }
