@@ -9,7 +9,7 @@
     - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/rocketpool.yaml"
   tasks:
     - name: Playbook | Execute rocketpool role
-      include_role:
+      ansible.builtin.include_role:
         name: rocketpool
         apply:
           tags:
@@ -17,15 +17,15 @@
 
   post_tasks:
     - name: Playbook | Set reboot required fact
-      stat:
+      ansible.builtin.stat:
         path: '/var/run/reboot-required'
-        get_checksum: no
-        get_attributes: no
-        get_mime: no
+        get_checksum: false
+        get_attributes: false
+        get_mime: false
       register: reboot_required
 
     - name: Playbook | Reboot node if required
-      reboot:
+      ansible.builtin.reboot:
         msg: "cloudstruct-rocketpool: Reboot required for system package updates."
         connect_timeout: 5
         reboot_timeout: 300
@@ -35,4 +35,4 @@
       when:
         - reboot_required.stat.exists
         - node.unattended_automatic_reboot
-      tags: ['skipci','reboot']
+      tags: ['skipci', 'reboot']

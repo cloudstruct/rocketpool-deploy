@@ -9,7 +9,7 @@
     - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/rocketpool.yaml"
   pre_tasks:
     - name: "Rocketpool Main | Set rocketpool_arch fact"
-      set_fact:
+      ansible.builtin.set_fact:
         rocketpool_arch: "{{
           'amd64' if ansible_architecture == 'x86_64'
           else 'arm64' if ansible_architecture == 'aarch64'
@@ -20,7 +20,7 @@
 
   tasks:
     - name: Playbook | Include base role
-      include_role:
+      ansible.builtin.include_role:
         name: base
         apply:
           tags:
@@ -29,7 +29,7 @@
         - always
 
     - name: Playbook | Include jnv.unattended-upgrades role
-      include_role:
+      ansible.builtin.include_role:
         name: jnv.unattended-upgrades
         apply:
           tags:
@@ -42,7 +42,7 @@
         - upgrades
 
     - name: Playbook | Include dev-sec.ssh-hardening role
-      include_role:
+      ansible.builtin.include_role:
         name: dev-sec.ssh-hardening
         apply:
           tags:
@@ -51,7 +51,7 @@
         - ssh
 
     - name: Playbook | Include dev-sec.os-hardening
-      include_role:
+      ansible.builtin.include_role:
         name: dev-sec.os-hardening
         apply:
           tags:
@@ -65,7 +65,7 @@
         - security
 
     - name: Playbook | Include geerlingguy.docker role
-      include_role:
+      ansible.builtin.include_role:
         name: geerlingguy.docker
       vars:
         docker_apt_arch: "{{ rocketpool_arch }}"

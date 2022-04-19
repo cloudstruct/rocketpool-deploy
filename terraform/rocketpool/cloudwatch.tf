@@ -4,7 +4,7 @@ module "cloudwatch_metric_alarms" {
 
   for_each = try(local.aws_vars.cloudwatch, {})
 
-  alarm_name          = "rocketpool-${local.pool}-${each.value.node_name}-${each.value.alarm_name}"
+  alarm_name          = "rocketpool-${local.pool}-${each.value.alarm_name}"
   alarm_description   = try(each.value.alarm_description, null)
   comparison_operator = each.value.comparison_operator
   evaluation_periods  = each.value.evaluation_periods

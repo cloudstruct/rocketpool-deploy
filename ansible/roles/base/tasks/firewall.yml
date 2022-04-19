@@ -21,14 +21,14 @@
     comment: "{{ rule.comment | default(omit) }}"
     proto: "{{ rule.proto | default(omit) }}"
   loop:
-    - { name: 'OpenSSH', comment: "Allow to OpenSSH Port" }
-    - { port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'tcp', comment: "Allow ETH1 Discovery TCP" }
-    - { port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'udp', comment: "Allow ETH1 Discovery UDP" }
-    - { port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'tcp', comment: "Allow ETH2 Discovery TCP" }
-    - { port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'udp', comment: "Allow ETH2 Discovery UDP" }
-    - { port: "{{ prometheus.node_exporter.port }}", proto: 'tcp', comment: "Allow prometheus to scrape node-exporter" }
-    - { port: "{{ prometheus.port }}", proto: 'tcp', comment: "Allow prometheus port ingress" }
-    - { port: "{{ grafana.port }}", proto: 'tcp', comment: "Allow grafana port ingress" }
+    - {name: 'OpenSSH', comment: "Allow to OpenSSH Port"}
+    - {port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'tcp', comment: "Allow ETH1 Discovery TCP"}
+    - {port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'udp', comment: "Allow ETH1 Discovery UDP"}
+    - {port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'tcp', comment: "Allow ETH2 Discovery TCP"}
+    - {port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'udp', comment: "Allow ETH2 Discovery UDP"}
+    - {port: "{{ prometheus.node_exporter.port }}", proto: 'tcp', comment: "Allow prometheus to scrape node-exporter"}
+    - {port: "{{ prometheus.port }}", proto: 'tcp', comment: "Allow prometheus port ingress"}
+    - {port: "{{ grafana.port }}", proto: 'tcp', comment: "Allow grafana port ingress"}
   loop_control:
     loop_var: 'rule'
     label: "{{ rule.comment }}"
@@ -44,12 +44,12 @@
     group: 'root'
     mode: 0644
   loop:
-    - { option: "enabled", value: "true" }
-    - { option: "banaction", value: "ufw" }
-    - { option: "port", value: "{{ global.ssh.port }}" }
-    - { option: "filter", value: "sshd" }
-    - { option: "logpath", value: "%(sshd_log)s" }
-    - { option: "maxretry", value: "5" }
+    - {option: "enabled", value: "true"}
+    - {option: "banaction", value: "ufw"}
+    - {option: "port", value: "{{ global.ssh.port }}"}
+    - {option: "filter", value: "sshd"}
+    - {option: "logpath", value: "%(sshd_log)s"}
+    - {option: "maxretry", value: "5"}
   loop_control:
     loop_var: 'ssh_config'
     label: "{{ ssh_config.option }}"

@@ -1,6 +1,6 @@
 ---
 - name: Rocketpool Install | Set config execution parameters
-  set_fact:
+  ansible.builtin.set_fact:
     ROCKETPOOL_CLI_CONFIG: "{{ ROCKETPOOL_CLI_CONFIG | default('')
                              + '--' + option.name + ' ' + (option.value|default('')) + ' '
                            }}"
@@ -9,13 +9,14 @@
     label: "{{ option.name }} = {{ option.value | default('true') }}"
     loop_var: 'option'
 
-- debug:
+- name: Rocketpool Install | Output config command via debug
+  ansible.builtin.debug:
     msg:
       - "Executing config command:"
       - "{{ rocketpool_bin }} service config {{ ROCKETPOOL_CLI_CONFIG }}"
 
 - name: Rocketpool Install | Create rocketpool directory
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ rocketpool_user_home }}/.rocketpool"
     owner: "{{ rocketpool.user | default('rp') }}"
@@ -25,41 +26,41 @@
 - name: Rocketpool Install | Execute rocketpool service config command
   become: true
   become_user: "{{ rocketpool.user | default('rp') }}"
-  command: "{{ rocketpool_bin }} service config {{ ROCKETPOOL_CLI_CONFIG }}"
+  ansible.builtin.command: "{{ rocketpool_bin }} service config {{ ROCKETPOOL_CLI_CONFIG }}"
   args:
     chdir: "{{ rocketpool_user_home }}/.rocketpool"
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  changed_when: True
+  changed_when: true
 
 - name: Rocketpool Install | Install rocketpool update tracker
   become: true
   become_user: "{{ rocketpool.user | default('rp') }}"
-  command: "{{ rocketpool_bin }} service install-update-tracker -y --version {{ rocketpool_version }}"
+  ansible.builtin.command: "{{ rocketpool_bin }} service install-update-tracker -y --version {{ rocketpool_version }}"
   args:
     chdir: "{{ rocketpool_user_home }}/.rocketpool"
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  changed_when: True
+  changed_when: true
 
 - name: Rocketpool Install | Check for previous installation
-  stat:
+  ansible.builtin.stat:
     path: "{{ rocketpool_user_home }}/.cloudstruct"
   register: previous_install
 
 - name: Rocketpool Install | Execute rocketpool service install command
   become: true
   become_user: "{{ rocketpool.user | default('rp') }}"
-  command: "{{ rocketpool_bin }} service install -y --no-deps --version {{ rocketpool_version }}"
+  ansible.builtin.command: "{{ rocketpool_bin }} service install -y --no-deps --version {{ rocketpool_version }}"
   args:
     chdir: "{{ rocketpool_user_home }}/.rocketpool"
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  changed_when: True
+  changed_when: true
 
 # TODO: Remove this when rocketpool 1.3.1 is released
 - name: Rocketpool Install | Correct invalid spacing in prometheus template
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ rocketpool_user_home }}/.rocketpool/templates/prometheus.tmpl"
     state: present
     search_string: 'host.docker.internal: host-gateway'
@@ -69,26 +70,26 @@
     mode: 0660
 
 - name: Rocketpool Install | Correct permissions on grafana datasource file
-  file:
+  ansible.builtin.file:
     path: "{{ rocketpool_user_home }}/.rocketpool/grafana-prometheus-datasource.yml"
     owner: "{{ rocketpool.user | default('rp') }}"
     group: "{{ rocketpool.user | default('rp') }}"
     mode: 0664
- 
+
 - name: Rocketpool Install | Check for previous installation
-  stat:
+  ansible.builtin.stat:
     path: "{{ rocketpool_user_home }}/.cloudstruct"
   register: previous_install
 
 - name: Rocketpool Install | Execute rocketpool service start command on existing installation
   become: true
   become_user: "{{ rocketpool.user | default('rp') }}"
-  command: "{{ rocketpool_bin }} service start -y"
+  ansible.builtin.command: "{{ rocketpool_bin }} service start -y"
   args:
     chdir: "{{ rocketpool_user_home }}/.rocketpool"
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  changed_when: True
+  changed_when: true
   when: previous_install.stat.exists
 
 - name: Rocketpool Install | New installation Block
@@ -97,15 +98,15 @@
     - name: Rocketpool Install | Execute rocketpool service start command for new installation
       become: true
       become_user: "{{ rocketpool.user | default('rp') }}"
-      command: "{{ rocketpool_bin }} service start -y --ignore-slash-timer"
+      ansible.builtin.command: "{{ rocketpool_bin }} service start -y --ignore-slash-timer"
       args:
         chdir: "{{ rocketpool_user_home }}/.rocketpool"
       vars:
         ansible_python_interpreter: /usr/bin/python3
-      changed_when: True
+      changed_when: true
 
     - name: Rocketpool Install | Create previous installation check file
-      file:
+      ansible.builtin.file:
         state: touch
         path: "{{ rocketpool_user_home }}/.cloudstruct"
         owner: "{{ rocketpool.user | default('rp') }}"

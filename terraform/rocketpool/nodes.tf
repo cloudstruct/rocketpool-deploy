@@ -1,9 +1,9 @@
 locals {
   bootstrap_template_vars = {
-    aws_vars  = local.aws_vars
-    node_vars = local.node_vars
-    eip_id = try(aws_eip.node[0].id, "false")
-    ebs_volume_id = aws_ebs_volume.node_data.id
+    aws_vars           = local.aws_vars
+    node_vars          = local.node_vars
+    eip_id             = try(aws_eip.node[0].id, "false")
+    ebs_volume_id      = aws_ebs_volume.node_data.id
     rocketpool_pool    = local.pool
     rocketpool_version = local.rp_vars.rocketpool.version
     s3_deploy_bucket   = aws_s3_bucket.deploy.id

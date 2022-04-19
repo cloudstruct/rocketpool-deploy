@@ -79,7 +79,7 @@ rocketpool:
     # - { name: 'teku-additionalVcFlags', value: '' }
     # - { name: 'smartnode-network', value: '' }
     # - { name: 'smartnode-projectName', value: '' }
-    # - { name: 'smartnode-dataPath', value: '' }
+    - { name: 'smartnode-dataPath', value: '/data/secrets' }
     # - { name: 'smartnode-manualMaxFee', value: '' }
     # - { name: 'smartnode-priorityFee', value: '' }
     # - { name: 'smartnode-rplClaimGasThreshold', value: '' }

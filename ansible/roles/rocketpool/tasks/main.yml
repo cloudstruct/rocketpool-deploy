@@ -1,6 +1,6 @@
 ---
 - name: "Rocketpool Main | Set rocketpool_arch fact"
-  set_fact:
+  ansible.builtin.set_fact:
     rocketpool_arch: "{{
       'amd64' if ansible_architecture == 'x86_64'
       else 'arm64' if ansible_architecture == 'aarch64'
@@ -12,7 +12,7 @@
   tags: ['always']
 
 - name: "Rocketpool Main | Download rocketpool binary '{{ rocketpool_version }}'"
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool_version }}/rocketpool-cli-linux-{{ rocketpool_arch }}"
     dest: '/usr/local/bin/rocketpool'
     mode: 0750

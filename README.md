@@ -30,11 +30,12 @@ The reasons someone might want to use this repo are:
 
 ### Known limitations
 - Currently only built for AWS or local servers.
+  - Accepting pull requests or issues requesting further support.
 - Currently only supports `Debian >= 11` or `Ubuntu >= 16`
 
 ### Pre-requisites
 - An AWS Account and AWS Access & Secret key credentials setup and ready to use
-- An ubuntu CLI which has python3, python3-pip, and python3-venv installed.
+- Debian/Ubuntu CLI which has python3, python3-pip, and python3-venv installed.
 
 ### Pre-Install Notes
 Take a look at and edit the following files as desired. The comments should provide context.
@@ -43,7 +44,16 @@ Take a look at and edit the following files as desired. The comments should prov
 - [vars/pools/mainnet-00/node.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/node.yaml)
 - [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml)
 
-The latest supported version can always be found [Here](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml#L7).
+**PLEASE Select your data path carefully**
+The automation will create and mount an AWS EBS volume at `/data`. All data paths are defaulted to use this as a persistent storage volume.
+
+This includes but is not limited to:
+- Prometheus Data
+- Grafana Data
+- Ethereum Chain data
+- Your wallet/secrets data
+
+Releases in this repo correspond directly to the rocketpool smartnode-install versions.
 
 ### Install Notes
 Execute the `./scripts/quick-install.sh` script to build and configure a rocketpool node.
@@ -102,7 +112,7 @@ Take a look at and edit the following files as desired. The comments should prov
 - [vars/pools/mainnet-00/node.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/node.yaml)
 - [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml)
 
-The latest supported version can always be found [Here](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml#L7).
+Releases in this repo correspond directly to the rocketpool smartnode-install versions.
 
 *It is strongly advised to keep make copy of the `mainnet-00` directory into `mainnet-01` and edit your settings there.  This will make future upgrades much easier.*
 
@@ -123,13 +133,9 @@ cp -R vars/pools/mainnet-00 vars/pools/mainnet-01
 ```
 
 ## Hybrid Mode
-[Hybrid mode](https://docs.rocketpool.net/guides/node/hybrid.html) is supported.  To enable simply fill out the appropriate values in [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml) for ETH1 `eth.eth1.provider` and `eth.eth1.wsProvider` and/or for ETH2 `eth.eth2.provider`. 
+[Hybrid mode](https://docs.rocketpool.net/guides/node/hybrid.html) is supported.  To enable simply fill out the appropriate values in [vars/pools/mainnet-00/rocketpool.yaml](https://github.com/cloudstruct/rocketpool-deploy/blob/main/vars/pools/mainnet-00/rocketpool.yaml). 
 
 ## Post Install Instructions
 **You should always read all of the documentation.  This is not advice on avoiding that.**
 After the installation you should return to the official Rocketpool documentation.  This will leave you off with needing to setup your wallet, stake your RPL, and then deposit.
 At the time of this writing it should leave you off right about [Here](https://docs.rocketpool.net/guides/node/starting-rp.html).
-
-## Credit
-- @tedsteen https://github.com/tedsteen/rocketpool for initial inspiration
-- @cloudstruct team for initial terraform code and layout
