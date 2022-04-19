@@ -1,18 +1,8 @@
-locals {
-  # Generate map of nodes to their alerts
-  alerts_by_node = flatten([
-    for node, node_config in local.nodes : {
-      for alert, alert_config in local.aws_vars.cloudwatch[node_config.type] : alert => merge(alert_config, { "node_name" = (node) })
-    }
-  ])[0]
-
-}
-
 module "cloudwatch_metric_alarms" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarm"
   version = "3.1.0"
 
-  for_each = local.alerts_by_node
+  for_each = try(local.aws_vars.cloudwatch, {})
 
   alarm_name          = "rocketpool-${local.pool}-${each.value.node_name}-${each.value.alarm_name}"
   alarm_description   = try(each.value.alarm_description, null)
@@ -29,6 +19,6 @@ module "cloudwatch_metric_alarms" {
   ok_actions    = try([module.notify_slack.this_slack_topic_arn], [])
 
   dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.node[each.value.node_name].name
+    AutoScalingGroupName = aws_autoscaling_group.node.name
   }
 }

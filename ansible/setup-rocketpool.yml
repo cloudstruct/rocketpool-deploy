@@ -7,25 +7,6 @@
     - "{{ playbook_dir }}/../vars/defaults.yaml"
     - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/node.yaml"
     - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/rocketpool.yaml"
-  pre_tasks:
-    - name: "Playbook | Set rocketpool_arch fact"
-      set_fact:
-        rocketpool_arch: 'amd64'
-      when: ansible_architecture == 'x86_64'
-
-    - name: "Playbook | Set rocketpool_arch fact"
-      set_fact:
-        rocketpool_arch: 'arm64'
-      when: ansible_architecture == 'aarch64'
-
-    - name: "Playbook | Download rocketpool binary '{{ rocketpool.version }}'"
-      get_url:
-        url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool.version }}/rocketpool-cli-linux-{{ rocketpool_arch }}"
-        dest: '/usr/local/bin/rocketpool'
-        mode: 0750
-        owner: "{{ rocketpool.user }}"
-        group: 'root'
-
   tasks:
     - name: Playbook | Execute rocketpool role
       include_role:
@@ -51,5 +32,7 @@
         pre_reboot_delay: 120
         post_reboot_delay: 30
         test_command: uptime
-      when: reboot_required.stat.exists
+      when:
+        - reboot_required.stat.exists
+        - node.unattended_automatic_reboot
       tags: ['skipci','reboot']

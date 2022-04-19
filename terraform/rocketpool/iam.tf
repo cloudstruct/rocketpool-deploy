@@ -1,7 +1,5 @@
 # Policy allowing EC2 instances to assume a role
 data "aws_iam_policy_document" "assume_role" {
-  for_each = local.nodes
-
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -14,10 +12,7 @@ data "aws_iam_policy_document" "assume_role" {
 
 # Policy allowing attaching the node's EIP
 data "aws_iam_policy_document" "eip_attach" {
-  for_each = {
-    for key, val in local.nodes :
-    key => val if lookup(val, "eip", false)
-  }
+  count = local.node_vars.node.eip ? 1 : 0
 
   statement {
     actions = [
@@ -33,7 +28,7 @@ data "aws_iam_policy_document" "eip_attach" {
       variable = "ec2:ResourceTag/Name"
 
       values = [
-        "${local.name_prefix}-node-${each.key}",
+        "${local.name_prefix}-node",
       ]
     }
   }
@@ -75,8 +70,6 @@ data "aws_iam_policy_document" "s3_deploy" {
 
 # Policy allowing attaching the node's EBS volume
 data "aws_iam_policy_document" "ebs_attach" {
-  for_each = local.nodes
-
   statement {
     actions = [
       "ec2:AttachVolume",
@@ -91,7 +84,7 @@ data "aws_iam_policy_document" "ebs_attach" {
       variable = "ec2:ResourceTag/Name"
 
       values = [
-        "${local.name_prefix}-node-${each.key}",
+        "${local.name_prefix}-node",
       ]
     }
   }
@@ -109,15 +102,13 @@ data "aws_iam_policy_document" "ebs_attach" {
 }
 
 resource "aws_iam_role" "node" {
-  for_each = local.nodes
+  name = "${local.name_prefix}-node"
 
-  name = "${local.name_prefix}-node-${each.key}"
-
-  assume_role_policy = data.aws_iam_policy_document.assume_role[each.key].json
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 
   inline_policy {
     name   = "ebs-attach"
-    policy = data.aws_iam_policy_document.ebs_attach[each.key].json
+    policy = data.aws_iam_policy_document.ebs_attach.json
   }
 
   inline_policy {
@@ -129,34 +120,32 @@ resource "aws_iam_role" "node" {
   # to make it conditional
   dynamic "inline_policy" {
     for_each = {
-      for key, val in { (each.key) = each.value } :
+      for key, val in { "node" = local.node_vars.node } :
       key => val if lookup(val, "eip", false)
     }
 
     content {
       name   = "eip-attach"
-      policy = data.aws_iam_policy_document.eip_attach[inline_policy.key].json
+      policy = data.aws_iam_policy_document.eip_attach[0].json
     }
   }
 
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node-${each.key}"
+      Name = "${local.name_prefix}-node"
     },
   )
 }
 
 resource "aws_iam_instance_profile" "node" {
-  for_each = local.nodes
-
-  name = "${local.name_prefix}-node-${each.key}"
-  role = aws_iam_role.node[each.key].name
+  name = "${local.name_prefix}-node"
+  role = aws_iam_role.node.name
 
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node-${each.key}"
+      Name = "${local.name_prefix}-node"
     },
   )
 

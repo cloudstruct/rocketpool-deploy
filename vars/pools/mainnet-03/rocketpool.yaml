@@ -24,14 +24,14 @@ rocketpool:
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
     # - { name: 'executionClientMode', value: '' }
     # - { name: 'executionClient', value: '' }
-    # - { name: 'useFallbackExecutionClient' }
+    - { name: 'useFallbackExecutionClient' }
     # - { name: 'fallbackExecutionClientMode', value: '' }
-    # - { name: 'fallbackExecutionClient', value: '' }
+    - { name: 'fallbackExecutionClient', value: 'infura' }
     # - { name: 'reconnectDelay', value: '' }
     # - { name: 'consensusClientMode', value: '' }
-    # - { name: 'consensusClient', value: '' }
+    - { name: 'consensusClient', value: 'prysm' }
     # - { name: 'externalConsensusClient', value: '' }
-    # - { name: 'enableMetrics' }
+    - { name: 'enableMetrics' }
     # - { name: 'bnMetricsPort', value: "{{ rocketpool.ports.beaconNodeMetrics }}" }
     # - { name: 'vcMetricsPort', value: "{{ rocketpool.ports.validatorClientMetrics }}" }
     # - { name: 'nodeMetricsPort', value: "{{ rocketpool.ports.nodeMetrics }}" }
@@ -51,14 +51,14 @@ rocketpool:
     # - { name: 'pocket-gatewayID', value: '' }
     # - { name: 'pocket-containerTag', value: '' }
     # - { name: 'pocket-additionalFlags', value: '' }
-    # - { name: 'consensusCommon-graffiti', value: '' }
+    - { name: 'consensusCommon-graffiti', value: 'CloudStruct' }
     # - { name: 'consensusCommon-checkpointSyncUrl', value: '' }
     # - { name: 'consensusCommon-p2pPort', value: "{{ rocketpool.ports.consensusCommonP2pPort }}" }
     # - { name: 'consensusCommon-apiPort', value: "{{ rocketpool.ports.consensusCommonApiPort }}" }
     # - { name: 'consensusCommon-openApiPort' }
     # - { name: 'consensusCommon-doppelgangerDetection', value: '' }
     # - { name: 'prysm-maxPeers', value: '' }
-    # - { name: 'prysm-rpcPort', value: "{{ rocketpool.ports.prysmRpcPort }}" }
+    # - { name: 'prysm-rpcPort', value: '' }
     # - { name: 'prysm-openRpcPort' }
     # - { name: 'prysm-bnContainerTag', value: '' }
     # - { name: 'prysm-vcContainerTag', value: '' }
@@ -69,7 +69,7 @@ rocketpool:
     # - { name: 'externalLighthouse-doppelgangerDetection', value: '' }
     # - { name: 'externalLighthouse-containerTag', value: '' }
     # - { name: 'externalLighthouse-additionalVcFlags', value: '' }
-    # - { name: 'exporter-enableRootFs' }
+    - { name: 'exporter-enableRootFs' }
     # - { name: 'exporter-port', value: "{{ prometheus.node_exporter.port }}" }
     - { name: 'exporter-containerTag', value: "{{ prometheus.node_exporter.version }}" }
     # - { name: 'exporter-additionalFlags', value: '' }
@@ -79,7 +79,7 @@ rocketpool:
     # - { name: 'teku-additionalVcFlags', value: '' }
     # - { name: 'smartnode-network', value: '' }
     # - { name: 'smartnode-projectName', value: '' }
-    # - { name: 'smartnode-dataPath', value: '' }
+    - { name: 'smartnode-dataPath', value: '/data/secrets' }
     # - { name: 'smartnode-manualMaxFee', value: '' }
     # - { name: 'smartnode-priorityFee', value: '' }
     # - { name: 'smartnode-rplClaimGasThreshold', value: '' }
@@ -94,7 +94,7 @@ rocketpool:
     # - { name: 'geth-ethstatsLogin', value: '' }
     # - { name: 'geth-containerTag', value: '' }
     # - { name: 'geth-additionalFlags', value: '' }
-    # - { name: 'infura-projectID', value: '' }
+    - { name: 'infura-projectID', value: '62bb6f70527d4076856860965652b6fb' }
     # - { name: 'infura-containerTag', value: '' }
     # - { name: 'infura-additionalFlags', value: '' }
     # - { name: 'externalExecution-httpUrl', value: '' }
@@ -142,9 +142,9 @@ prometheus:
   version: 'v2.34.0'
   # Where to store Prometheus persistent data. (/data is EBS volume mount location)
   data_path: '/data/prometheus/'
-  port: 9091
   # Node Exporter settings
+  port: 9091
   node_exporter:
-    # https://github.com/prometheus/node_exporter/releases
     port: 9103
+    # https://github.com/prometheus/node_exporter/releases
     version: 'v1.3.1'

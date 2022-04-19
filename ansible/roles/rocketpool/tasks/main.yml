@@ -1,6 +1,23 @@
 ---
-- name: Main | Include rocketpool config tasks
-  include_tasks: config.yml
+- name: "Rocketpool Main | Set rocketpool_arch fact"
+  set_fact:
+    rocketpool_arch: "{{
+      'amd64' if ansible_architecture == 'x86_64'
+      else 'arm64' if ansible_architecture == 'aarch64'
+      else 'UNSUPPORTED_ARCHITECTURE'
+    }}"
+    rocketpool_version: "{{ VERSION | default(rocketpool.version) }}"
+  when:
+    - rocketpool_arch is not defined or rocketpool_version is not defined
+  tags: ['always']
+
+- name: "Rocketpool Main | Download rocketpool binary '{{ rocketpool_version }}'"
+  get_url:
+    url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool_version }}/rocketpool-cli-linux-{{ rocketpool_arch }}"
+    dest: '/usr/local/bin/rocketpool'
+    mode: 0750
+    owner: "{{ rocketpool.user | default('rp') }}"
+    group: 'root'
 
 - name: Main | Include rocketpool install tasks
   include_tasks: install.yml

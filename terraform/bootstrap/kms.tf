@@ -8,6 +8,6 @@ resource "aws_kms_key" "terraform_state" {
 }
 
 resource "aws_kms_alias" "terraform_key" {
-  name          = "alias/cloudstruct_rocketpool_tfkey"
+  name          = "alias/cloudstruct_rocketpool_tfkey_${terraform.workspace}"
   target_key_id = aws_kms_key.terraform_state.key_id
 }

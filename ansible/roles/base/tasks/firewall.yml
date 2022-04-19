@@ -1,7 +1,7 @@
 ---
 - name: Base-Firewall | Configure Firewall rules
   community.general.ufw:
-    state: enabled
+    state: "{{ 'enabled' if (node.ufw.enabled | default(True)) else 'disabled' }}"
     direction: incoming
     policy: deny
 
@@ -10,6 +10,7 @@
     rule: limit
     port: ssh
     proto: tcp
+  when: node.ufw.enabled | default(True)
 
 - name: Base-Firewall | Allow SSH, ETH1 and ETH2
   community.general.ufw:
@@ -21,14 +22,17 @@
     proto: "{{ rule.proto | default(omit) }}"
   loop:
     - { name: 'OpenSSH', comment: "Allow to OpenSSH Port" }
-    - { port: "{{ eth.eth1.port }}", proto: 'tcp', comment: "Allow ETH1 Discovery TCP" }
-    - { port: "{{ eth.eth1.port }}", proto: 'udp', comment: "Allow ETH1 Discovery UDP" }
-    - { port: "{{ eth.eth2.port }}", proto: 'tcp', comment: "Allow ETH2 Discovery TCP" }
-    - { port: "{{ eth.eth2.port }}", proto: 'udp', comment: "Allow ETH2 Discovery UDP" }
+    - { port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'tcp', comment: "Allow ETH1 Discovery TCP" }
+    - { port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'udp', comment: "Allow ETH1 Discovery UDP" }
+    - { port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'tcp', comment: "Allow ETH2 Discovery TCP" }
+    - { port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'udp', comment: "Allow ETH2 Discovery UDP" }
     - { port: "{{ prometheus.node_exporter.port }}", proto: 'tcp', comment: "Allow prometheus to scrape node-exporter" }
+    - { port: "{{ prometheus.port }}", proto: 'tcp', comment: "Allow prometheus port ingress" }
+    - { port: "{{ grafana.port }}", proto: 'tcp', comment: "Allow grafana port ingress" }
   loop_control:
     loop_var: 'rule'
     label: "{{ rule.comment }}"
+  when: node.ufw.enabled | default(True)
 
 - name: Base-Firewall | Add fail2ban sshd configuration
   ini_file:
@@ -49,5 +53,6 @@
   loop_control:
     loop_var: 'ssh_config'
     label: "{{ ssh_config.option }}"
+  when: node.fail2ban.enabled | default(True)
   notify:
     - Restart fail2ban

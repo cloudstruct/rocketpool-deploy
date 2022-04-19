@@ -2,14 +2,8 @@ locals {
   bootstrap_template_vars = {
     aws_vars  = local.aws_vars
     node_vars = local.node_vars
-    eip_id = {
-      for key, val in local.nodes :
-      key => aws_eip.node[key].id if lookup(val, "eip", false)
-    }
-    ebs_volume_id = {
-      for key, val in local.nodes :
-      key => aws_ebs_volume.node_data[key].id
-    }
+    eip_id = try(aws_eip.node[0].id, "false")
+    ebs_volume_id = aws_ebs_volume.node_data.id
     rocketpool_pool    = local.pool
     rocketpool_version = local.rp_vars.rocketpool.version
     s3_deploy_bucket   = aws_s3_bucket.deploy.id
@@ -22,7 +16,7 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-${try(local.aws_vars.ec2.instance_arch, "amd64")}-server-*"]
   }
 
   filter {
@@ -52,8 +46,6 @@ resource "aws_key_pair" "common" {
 
 # Cloud-init config template
 data "template_cloudinit_config" "node" {
-  for_each = local.nodes
-
   gzip = false
 
   part {
@@ -75,33 +67,31 @@ data "template_cloudinit_config" "node" {
         permissions: '0755'
         owner: 'root:root'
         content: |
-          ${indent(6, templatefile("${path.root}/templates/bootstrap.sh.tpl", merge(local.bootstrap_template_vars, { node_key = each.key, node_value = each.value })))}
+          ${indent(6, templatefile("${path.root}/templates/bootstrap.sh.tpl", local.bootstrap_template_vars))}
     EOF
   }
 }
 
 # Launch templates
 resource "aws_launch_template" "node" {
-  for_each = local.nodes
-
-  name_prefix   = "${local.name_prefix}-node-${each.key}"
+  name_prefix   = "${local.name_prefix}-node"
   image_id      = data.aws_ami.ubuntu.image_id
-  instance_type = local.aws_vars.ec2[each.value.type].instance_type
-  key_name      = try(aws_key_pair.common[0].key_name, each.value.keypair)
+  instance_type = local.aws_vars.ec2.instance_type
+  key_name      = try(aws_key_pair.common[0].key_name, local.node_vars.node.keypair)
 
   update_default_version = true
 
-  user_data = data.template_cloudinit_config.node[each.key].rendered
+  user_data = data.template_cloudinit_config.node.rendered
 
   disable_api_termination = true
 
   vpc_security_group_ids = concat(
     [aws_security_group.common.id],
-    lookup(each.value, "extra_secgroups", []),
+    lookup(local.node_vars.node, "extra_secgroups", []),
   )
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.node[each.key].name
+    name = aws_iam_instance_profile.node.name
   }
 
   block_device_mappings {
@@ -118,26 +108,24 @@ resource "aws_launch_template" "node" {
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node-${each.key}"
+      Name = "${local.name_prefix}-node"
     },
   )
 }
 
 # Data EBS volumes
 resource "aws_ebs_volume" "node_data" {
-  for_each = local.nodes
-
   availability_zone = local.aws_vars.vpc.az
 
   encrypted = true
 
-  size = try(each.value.ebs_volume_size, 1000)
+  size = try(local.node_vars.node.ebs_volume_size, 1000)
   type = "gp3"
 
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node-${each.key}"
+      Name = "${local.name_prefix}-node"
     },
   )
 }
@@ -145,16 +133,14 @@ resource "aws_ebs_volume" "node_data" {
 # Autoscaling groups
 # tflint-ignore: aws_resource_missing_tags
 resource "aws_autoscaling_group" "node" {
-  for_each = local.nodes
-
   desired_capacity = 1
   max_size         = 1
   min_size         = 1
 
-  vpc_zone_identifier = [each.value.subnet]
+  vpc_zone_identifier = [module.vpc.public_subnets[0]]
 
   launch_template {
-    id      = aws_launch_template.node[each.key].id
+    id      = aws_launch_template.node.id
     version = "$Latest"
   }
 
@@ -167,8 +153,8 @@ resource "aws_autoscaling_group" "node" {
     for_each = merge(
       local.default_tags,
       {
-        Name          = "${local.name_prefix}-node-${each.key}"
-        eth_node_type = each.value.type
+        Name          = "${local.name_prefix}-node"
+        eth_node_type = "core"
         eth_network   = try(local.node_vars.eth_network, "mainnet")
       },
     )
@@ -183,17 +169,15 @@ resource "aws_autoscaling_group" "node" {
 
 # EIP
 resource "aws_eip" "node" {
-  for_each = {
-    for key, val in local.nodes :
-    key => val if lookup(val, "eip", false)
-  }
+  count = local.node_vars.node.eip ? 1 : 0
 
   vpc = true
 
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node-${each.key}"
+      Name = "${local.name_prefix}-node"
     },
   )
+
 }
