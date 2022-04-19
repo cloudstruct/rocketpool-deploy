@@ -1,2 +1,4 @@
 awscli
 ansible
+# Terraform compliance requires this pin
+emoji~=1.6.3

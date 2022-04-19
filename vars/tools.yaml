@@ -1,6 +1,6 @@
 yq:
-  version: 4.13.2
+  version: 4.24.4
   url: https://github.com/mikefarah/yq/releases/download/vVERSION/yq_linux_ARCH
 terraform:
-  version: 1.0.10
+  version: 1.1.8
   url: https://releases.hashicorp.com/terraform/VERSION/terraform_VERSION_linux_ARCH.zip

@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
+    region         = "us-east-2"
     bucket         = "cloudstruct-rocketpool-tf-state"
     key            = "rocketpool.tfstate"
-    region         = "us-east-2"
     dynamodb_table = "terraform-state-lock"
     encrypt        = true
     kms_key_id     = "alias/cloudstruct_rocketpool_tfkey"
@@ -10,16 +10,14 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "< 4"
+      source = "hashicorp/aws"
     }
     tls = {
-      source  = "hashicorp/tls"
-      version = "< 4"
+      source = "hashicorp/tls"
     }
   }
 
-  required_version = ">= 1, < 1.1"
+  required_version = ">= 0.13, < 2"
 
 }
 

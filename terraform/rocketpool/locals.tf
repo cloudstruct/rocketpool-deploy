@@ -13,12 +13,4 @@ locals {
     rocket_pool = local.pool
   }
 
-  nodes = { for node, values in local.node_vars.nodes : node => merge(
-    values,
-    {
-      extra_secgroups = [aws_security_group.core_node.id]
-      subnet          = module.vpc.public_subnets[0]
-    }
-  ) }
-
 }

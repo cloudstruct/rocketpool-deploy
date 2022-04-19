@@ -1,30 +1,32 @@
 ---
 - name: Rocketpool Post Install | Check ETH1 port
-  wait_for:
+  ansible.builtin.wait_for:
     host: 0.0.0.0
-    port: "{{ eth1port }}"
+    port: "{{ rocketpool.ports.gethP2pPort }}"
     timeout: 300
     delay: 2
-  when: ((eth.eth1.provider | default('')) | length == 0) or ((eth.eth1.wsProvider | default('')) | length == 0)
-  loop:
-    - "{{ eth.eth1.port }}"
-  loop_control:
-    loop_var: 'eth1port'
 
 - name: Rocketpool Post Install | Check ETH2 port
-  wait_for:
+  ansible.builtin.wait_for:
     host: 0.0.0.0
-    port: "{{ eth2port }}"
+    port: "{{ rocketpool.ports.consensusCommonP2pPort }}"
     timeout: 300
     delay: 2
-  when: ((eth.eth2.provider | default('')) | length == 0)
-  loop:
-    - "{{ eth.eth2.port }}"
+
+- name: Rocketpool Post Install | Check prometheus port if exposed
+  ansible.builtin.wait_for:
+    host: 0.0.0.0
+    port: "{{ prometheus.port }}"
+    timeout: 300
+    delay: 2
+  when: configOpt.name == 'prometheus-openPort'
+  loop: "{{ rocketpool.config }}"
   loop_control:
-    loop_var: 'eth2port'
+    label: "{{ configOpt.name }}"
+    loop_var: 'configOpt'
 
 - name: Rocketpool Post Install | Check metrics ports
-  wait_for:
+  ansible.builtin.wait_for:
     host: 0.0.0.0
     port: "{{ metrics_port }}"
     timeout: 300

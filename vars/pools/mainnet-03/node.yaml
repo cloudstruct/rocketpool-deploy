@@ -29,11 +29,11 @@ node:
   # cloudwatch: true         # Optional: defaults to True
   # docker:
   #   compose: 'x.x.x'       # Optional: Will override 'global.docker.compose.version'
-  # ebs_volume_size: 1000    # Optional: defaults to 1000G
+  ebs_volume_size: 20    # Optional: defaults to 1000G
   # extra_secgroups: []      # Additional security list IDs applied to this node
   # fail2ban:
   #   enabled: true          # Optional: defaults to True
-  # keypair: my-key-pair     # Specify existing AWS SSH Keypair
+  keypair: rocket-pool-mainnet-02     # Optional: Specify existing AWS SSH Keypair
   # ufw:
   #   enabled: true          # Optional: defaults to True
   # vfs_cache_pressure: 10   # Optional: defaults to 10

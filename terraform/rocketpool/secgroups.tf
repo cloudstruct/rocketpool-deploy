@@ -21,20 +21,6 @@ resource "aws_security_group" "common" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(
-    local.default_tags,
-    {
-      Name = "${local.name_prefix}-common"
-    },
-  )
-}
-
-resource "aws_security_group" "core_node" {
-  name        = "${local.name_prefix}-core-node"
-  description = "Security group for core node in RocketPool pool ${local.pool}"
-
-  vpc_id = module.vpc.vpc_id
-
   ingress {
     description = "SSH from internet"
     from_port   = local.node_vars.global.ssh.port
@@ -90,7 +76,7 @@ resource "aws_security_group" "core_node" {
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node"
+      Name = "${local.name_prefix}-common"
     },
   )
 }

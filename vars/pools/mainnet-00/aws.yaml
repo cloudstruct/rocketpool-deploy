@@ -8,47 +8,45 @@ create_rsa_key: true
 
 # CloudWatch alerts for your node
 cloudwatch:
-  core:
-    cpu:
-      alarm_name: cpu-utilization-high
-      alarm_description: "CPU Utilization is over 85% for 6 minutes on core node."
-      comparison_operator: "GreaterThanOrEqualToThreshold"
-      evaluation_periods: "3"
-      threshold: "85"
-      period: "120"
-      namespace: "AWS/EC2"
-      metric_name: "CPUUtilization"
-      statistic: "Average"
+  cpu:
+    alarm_name: cpu-utilization-high
+    alarm_description: "CPU Utilization is over 85% for 6 minutes on core node."
+    comparison_operator: "GreaterThanOrEqualToThreshold"
+    evaluation_periods: "3"
+    threshold: "85"
+    period: "120"
+    namespace: "AWS/EC2"
+    metric_name: "CPUUtilization"
+    statistic: "Average"
 
-    instance:
-      alarm_name: instance-termination
-      alarm_description: "An instance in the rocketpool ASG is terminating"
-      comparison_operator: "GreaterThanOrEqualToThreshold"
-      evaluation_periods: "1"
-      threshold: "1"
-      period: "120"
-      namespace: "AWS/AutoScaling"
-      metric_name: "GreaterThanOrEqualToThreshold"
-      statistic: "Average"
+  instance:
+    alarm_name: instance-termination
+    alarm_description: "An instance in the rocketpool ASG is terminating"
+    comparison_operator: "GreaterThanOrEqualToThreshold"
+    evaluation_periods: "1"
+    threshold: "1"
+    period: "120"
+    namespace: "AWS/AutoScaling"
+    metric_name: "GreaterThanOrEqualToThreshold"
+    statistic: "Average"
 
-    service:
-      alarm_name: in-service-instances
-      alarm_description: "Rocketpool ASG has less than 1 instances in service."
-      comparison_operator: "LessThanOrEqualToThreshold"
-      evaluation_periods: "1"
-      metric_name: "GroupInServiceInstances"
-      namespace: "AWS/AutoScaling"
-      period: "120"
-      statistic: "Average"
-      threshold: "0"
+  service:
+    alarm_name: in-service-instances
+    alarm_description: "Rocketpool ASG has less than 1 instances in service."
+    comparison_operator: "LessThanOrEqualToThreshold"
+    evaluation_periods: "1"
+    metric_name: "GroupInServiceInstances"
+    namespace: "AWS/AutoScaling"
+    period: "120"
+    statistic: "Average"
+    threshold: "0"
 
 ec2:
-  # Core node. Currently the only node 'type'.
-  core:
-    # AWS Instance Type
-    instance_type: 'r5a.large'
-    # Automatically get your executing workstation public IP and add to SSH whitelist
-    allow_workstation_ip: true
+  # AWS Instance Type
+  instance_type: 'r5g.large'
+  instance_arch: 'arm64'  # Optional: Defaults to 'amd64'
+  # Automatically get your executing workstation public IP and add to SSH whitelist
+  allow_workstation_ip: true
 
 # VPC Network Settings
 vpc:

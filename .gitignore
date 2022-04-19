@@ -4,6 +4,7 @@ vars/pools/mainnet-01*
 vars/pools/mainnet-02*
 *tf.plan
 *state.out
+ansible/local-update.sh
 terraform/plan
 terraform/plan.json
 terraform/bootstrap/terraform.tfstate.d

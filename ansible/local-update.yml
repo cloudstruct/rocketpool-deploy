@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/defaults.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/node.yaml"
+    - "{{ playbook_dir }}/../vars/pools/{{ POOL }}/rocketpool.yaml"
+  tasks:
+    - name: Playbook | Execute rocketpool role
+      include_role:
+        name: rocketpool
+        apply:
+          tags:
+            - rocketpool

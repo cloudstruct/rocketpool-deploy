@@ -4,9 +4,9 @@ export AWS_DEFAULT_REGION=${aws_vars.region}
 
 INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
-%{if lookup(node_value, "eip", false)}
+%{if eip_id != "false" }
 
-EIP_ALLOCATION_ID=${eip_id[node_key]}
+EIP_ALLOCATION_ID=${eip_id}
 
 (
 set -x
@@ -16,13 +16,24 @@ aws ec2 associate-address --instance-id $${INSTANCE_ID} --allocation-id $${EIP_A
 
 %{endif}
 
-VOLUME_ID=${ebs_volume_id[node_key]}
+VOLUME_ID=${ebs_volume_id}
 NVME_DEVICE=nvme1n1
 MOUNT_DIR=/data
 
 (
 set -x
-aws ec2 attach-volume --volume-id $${VOLUME_ID} --instance-id $${INSTANCE_ID} --device /dev/sdf
+END=0
+until [ "$END" -eq 1 ]
+do
+  ATTACHED_INSTANCE=$(aws ec2 describe-volumes --volume-ids "$VOLUME_ID" | jq -r '.Volumes[] | .Attachments[].InstanceId' | sort -u)
+  echo "INFO: Attached instance: $${ATTACHED_INSTANCE}"
+  aws ec2 attach-volume --volume-id "$VOLUME_ID" --instance-id "$INSTANCE_ID" --device /dev/sdf
+  if [[ "$?" == 0 ]]; then
+    END=1
+  elif [[ "$ATTACHED_INSTANCE" == "$INSTANCE_ID" ]]; then
+    END=1
+  fi
+done
 )
 
 # Wait for device to show up
