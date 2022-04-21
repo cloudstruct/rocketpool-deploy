@@ -35,7 +35,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.10
+          terraform_version: 1.1.9
 
       - uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -86,7 +86,11 @@ jobs:
           if terraform workspace list | sed 's/\*/ /g' | grep -q ${{ matrix.pool }}; then
             terraform workspace select ${{ matrix.pool }}
             terraform init -input=false
-            terraform plan -input=false -lock=false -out=${{ matrix.pool }}-${{ matrix.dir }}.plan
+            if [[ "${{ matrix.dir }}" == "bootstrap" ]]; then
+              terraform plan -var "pool=${{ matrix.pool }}" -lock=false -out=${{ matrix.pool }}-${{ matrix.dir }}.plan
+            else
+              terraform plan -input=false -lock=false -out=${{ matrix.pool }}-${{ matrix.dir }}.plan
+            fi
             terraform show -json ${{ matrix.pool }}-${{ matrix.dir }}.plan > ${{ matrix.pool }}-${{ matrix.dir }}.plan.json
           fi
 

@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "log_bucket" {
   count  = try(local.aws_vars.s3.buckets.tfstate.create, true) ? 1 : 0
-  bucket = "cloudstruct-rocketpool-${local.aws_vars.region}-access-log-${terraform.workspace}"
+  bucket = "cloudstruct-rocketpool-${local.aws_vars.region}-access-log"
 
   force_destroy = true
 
@@ -27,7 +27,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "log_bucket" {
 
 resource "aws_s3_bucket" "terraform_state" {
   count  = try(local.aws_vars.s3.buckets.tfstate.create, true) ? 1 : 0
-  bucket = "cloudstruct-rocketpool-tf-state-${terraform.workspace}"
+  bucket = "cloudstruct-rocketpool-tf-state"
 
   force_destroy = true
 

@@ -1,5 +1,5 @@
 locals {
-  pool = terraform.workspace
+  pool = var.pool
 
   aws_vars = yamldecode(file("../../vars/pools/${local.pool}/aws.yaml"))
 
