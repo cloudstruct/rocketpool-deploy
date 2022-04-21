@@ -76,6 +76,22 @@
     group: "{{ rocketpool.user | default('rp') }}"
     mode: 0664
 
+- name: Rocketpool Install | Template override files
+  ansible.builtin.template:
+    src: "{{ template_file.src }}"
+    dest: "{{ template_file.dst }}"
+    owner: "{{ rocketpool.user | default('rp') }}"
+    group: "{{ rocketpool.user | default('rp') }}"
+    mode: 0660
+  loop:
+    - {src: "override_eth1.yml.j2", dst: "{{ rocketpool_user_home }}/.rocketpool/override/eth1.yml"}
+    - {src: "override_eth2.yml.j2", dst: "{{ rocketpool_user_home }}/.rocketpool/override/eth2.yml"}
+    - {src: "override_grafana.yml.j2", dst: "{{ rocketpool_user_home }}/.rocketpool/override/grafana.yml"}
+    - {src: "override_prometheus.yml.j2", dst: "{{ rocketpool_user_home }}/.rocketpool/override/prometheus.yml"}
+  loop_control:
+    label: "{{ template_file.dst }}"
+    loop_var: 'template_file'
+
 - name: Rocketpool Install | Check for previous installation
   ansible.builtin.stat:
     path: "{{ rocketpool_user_home }}/.cloudstruct"

@@ -1,6 +1,7 @@
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "cloudstruct-rocketpool-${local.pool}-access-log"
-  tags   = local.default_tags
+  bucket        = "cloudstruct-rocketpool-${local.pool}-access-log"
+  tags          = local.default_tags
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_acl" "log_bucket" {

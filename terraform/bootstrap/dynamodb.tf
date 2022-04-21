@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name         = "terraform-state-lock-${terraform.workspace}"
+  name         = "terraform-state-lock"
   hash_key     = "LockID"
   billing_mode = "PAY_PER_REQUEST"
 
@@ -17,7 +17,7 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
   }
 
   tags = merge(
-    { "Name" = "terraform-state-lock-${terraform.workspace}" },
+    { "Name" = "terraform-state-lock" },
     local.default_tags
   )
 
