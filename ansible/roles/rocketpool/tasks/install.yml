@@ -58,17 +58,6 @@
     ansible_python_interpreter: /usr/bin/python3
   changed_when: true
 
-# TODO: Remove this when rocketpool 1.3.1 is released
-- name: Rocketpool Install | Correct invalid spacing in prometheus template
-  ansible.builtin.lineinfile:
-    path: "{{ rocketpool_user_home }}/.rocketpool/templates/prometheus.tmpl"
-    state: present
-    search_string: 'host.docker.internal: host-gateway'
-    line: '       - "host.docker.internal:host-gateway"'
-    owner: "{{ rocketpool.user | default('rp') }}"
-    group: "{{ rocketpool.user | default('rp') }}"
-    mode: 0660
-
 - name: Rocketpool Install | Correct permissions on grafana datasource file
   ansible.builtin.file:
     path: "{{ rocketpool_user_home }}/.rocketpool/grafana-prometheus-datasource.yml"

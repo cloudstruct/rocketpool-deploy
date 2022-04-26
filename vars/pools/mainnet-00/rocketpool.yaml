@@ -18,7 +18,7 @@ rocketpool:
     executionCommonWsPort: 8546
     gethP2pPort: 30303
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.3.0'
+  version: 'v1.3.1'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
@@ -132,7 +132,7 @@ grafana:
   dataDir: '/data/grafana'
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '8.4.7'
+  version: '8.5.0'
 
 eth:
   network: 'mainnet'
@@ -145,7 +145,7 @@ eth:
 
 prometheus:
   # https://github.com/prometheus/prometheus/releases
-  version: 'v2.34.0'
+  version: 'v2.35.0'
   # Where to store Prometheus persistent data. (/data is EBS volume mount location)
   dataDir: '/data/prometheus'
   port: 9091
