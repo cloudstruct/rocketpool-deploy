@@ -18,6 +18,9 @@ node:
   #   enabled: true          # Optional: defaults to True
   ssh:
     port: 22 # SSH port for server to run on
+    # user: ubuntu           # Optional (Required if using node.ssh.public_keys): User to set authorized_keys file for
+    # public_keys:           # Optional: Supply additional public keys to add to the 'authorized_keys' file of the server
+    #   - 'ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQE....'
   # ufw:
   #   enabled: true          # Optional: defaults to True
   # vfs_cache_pressure: 10   # Optional: defaults to 10

@@ -46,3 +46,13 @@
     nopassword: true
     runas: ALL
     commands: ALL
+
+- name: System | Add authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ node.ssh.user }}"
+    state: present
+    key: "{{ key }}"
+  when: node.ssh.user | default(false)
+  loop: "{{ node.ssh.public_keys }}"
+  loop_control:
+    loop_var: 'key'
