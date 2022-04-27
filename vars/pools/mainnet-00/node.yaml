@@ -1,11 +1,8 @@
 ---
-global:
-  ssh:
-    # Dynamically add or replace the IP of the machine executing terraform
-    # to the hosts security group SSH ALLOW list
-    allow_workstation_ip: true
-    # SSH port for server to run on
-    port: 22
+node:
+  unattended_automatic_reboot: false # Whether or not to reboot node automatically for security patches
+  # unattended_automatic_reboot_time: "02:00"   # Optional: defaults to 2AM system time
+  # unattended_remove_unused_dependencies: true # Optional: defaults to true
   docker:
     # docker-compose release version
     # https://github.com/docker/compose/releases
@@ -17,23 +14,10 @@ global:
     # Optional: Defaults to 'rp'
     users:
       - "{{ rocketpool.user | default('rp') }}"
-
-node:
-  name: rp-node-00
-  # Use an Elastic IP address
-  eip: true
-  # Whether or not to reboot node automatically for security patches
-  unattended_automatic_reboot: false
-  # unattended_automatic_reboot_time: "02:00"   # Optional: defaults to 2AM system time
-  # unattended_remove_unused_dependencies: true # Optional: defaults to true
-  # cloudwatch: true         # Optional: defaults to True
-  # docker:
-  #   compose: 'x.x.x'       # Optional: Will override 'global.docker.compose.version'
-  # ebs_volume_size: 1000    # Optional: defaults to 1000G
-  # extra_secgroups: []      # Additional security list IDs applied to this node
   # fail2ban:
   #   enabled: true          # Optional: defaults to True
-  # keypair: my-key-pair     # Specify existing AWS SSH Keypair
+  ssh:
+    port: 22 # SSH port for server to run on
   # ufw:
   #   enabled: true          # Optional: defaults to True
   # vfs_cache_pressure: 10   # Optional: defaults to 10

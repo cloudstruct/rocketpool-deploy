@@ -3,7 +3,7 @@ locals {
 }
 
 data "http" "workstation_public_ip" {
-  count = try(local.node_vars.global.ssh.allow_workstation_ip, false) ? 1 : 0
+  count = try(local.aws_vars.ec2.allow_workstation_ip, false) ? 1 : 0
   url   = "https://ifconfig.me/ip"
 }
 
@@ -23,8 +23,8 @@ resource "aws_security_group" "common" {
 
   ingress {
     description = "SSH from internet"
-    from_port   = local.node_vars.global.ssh.port
-    to_port     = local.node_vars.global.ssh.port
+    from_port   = local.node_vars.node.ssh.port
+    to_port     = local.node_vars.node.ssh.port
     protocol    = "tcp"
     cidr_blocks = local.ssh_whitelist
   }

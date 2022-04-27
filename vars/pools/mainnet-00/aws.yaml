@@ -42,11 +42,15 @@ cloudwatch:
     threshold: "0"
 
 ec2:
-  # AWS Instance Type
-  instance_type: 'r5g.large'
-  instance_arch: 'arm64'  # Optional: Defaults to 'amd64'
-  # Automatically get your executing workstation public IP and add to SSH whitelist
-  allow_workstation_ip: true
+  allow_workstation_ip: true # Automatically get your executing workstation public IP and add to SSH whitelist
+  # cloudwatch: true         # Optional: defaults to True
+  instance_type: 'r5g.large' # AWS Instance Type
+  instance_arch: 'arm64'     # Optional: Defaults to 'amd64'
+  # ebs_volume_size: 1000    # Optional: defaults to 1000G
+  eip: true                  # Use an Elastic IP address
+  # extra_secgroups: []      # Additional security list IDs applied to this node
+  # keypair: my-key-pair     # Specify existing AWS SSH Keypair
+  name: rp-node-00
 
 # VPC Network Settings
 vpc:

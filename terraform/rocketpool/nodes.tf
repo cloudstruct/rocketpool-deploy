@@ -74,10 +74,10 @@ data "template_cloudinit_config" "node" {
 
 # Launch templates
 resource "aws_launch_template" "node" {
-  name_prefix   = "${local.name_prefix}-node"
+  name_prefix   = "${local.name_prefix}-${local.aws_vars.ec2.name}"
   image_id      = data.aws_ami.ubuntu.image_id
   instance_type = local.aws_vars.ec2.instance_type
-  key_name      = try(aws_key_pair.common[0].key_name, local.node_vars.node.keypair)
+  key_name      = try(aws_key_pair.common[0].key_name, local.aws_vars.ec2.keypair)
 
   update_default_version = true
 
@@ -87,7 +87,7 @@ resource "aws_launch_template" "node" {
 
   vpc_security_group_ids = concat(
     [aws_security_group.common.id],
-    lookup(local.node_vars.node, "extra_secgroups", []),
+    lookup(local.aws_vars.ec2, "extra_secgroups", []),
   )
 
   iam_instance_profile {
@@ -119,7 +119,7 @@ resource "aws_ebs_volume" "node_data" {
 
   encrypted = true
 
-  size = try(local.node_vars.node.ebs_volume_size, 1000)
+  size = try(local.aws_vars.ec2.ebs_volume_size, 1000)
   type = "gp3"
 
   tags = merge(
@@ -169,7 +169,7 @@ resource "aws_autoscaling_group" "node" {
 
 # EIP
 resource "aws_eip" "node" {
-  count = local.node_vars.node.eip ? 1 : 0
+  count = local.aws_vars.ec2.eip ? 1 : 0
 
   vpc = true
 
