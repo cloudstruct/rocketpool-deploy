@@ -2,7 +2,10 @@ module "cloudwatch_metric_alarms" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarm"
   version = "3.1.0"
 
-  for_each = try(local.aws_vars.cloudwatch, {})
+  for_each = {
+    for key, val in try(local.aws_vars.cloudwatch, {}) :
+    key => val if try(local.aws_vars.ec2.cloudwatch, true)
+  }
 
   alarm_name          = "rocketpool-${local.pool}-${each.value.alarm_name}"
   alarm_description   = try(each.value.alarm_description, null)

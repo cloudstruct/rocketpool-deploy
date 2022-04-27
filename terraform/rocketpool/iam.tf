@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "assume_role" {
 
 # Policy allowing attaching the node's EIP
 data "aws_iam_policy_document" "eip_attach" {
-  count = local.node_vars.node.eip ? 1 : 0
+  count = local.aws_vars.ec2.eip ? 1 : 0
 
   statement {
     actions = [

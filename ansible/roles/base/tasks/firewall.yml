@@ -46,7 +46,7 @@
   loop:
     - {option: "enabled", value: "true"}
     - {option: "banaction", value: "ufw"}
-    - {option: "port", value: "{{ global.ssh.port }}"}
+    - {option: "port", value: "{{ node.ssh.port }}"}
     - {option: "filter", value: "sshd"}
     - {option: "logpath", value: "%(sshd_log)s"}
     - {option: "maxretry", value: "5"}
