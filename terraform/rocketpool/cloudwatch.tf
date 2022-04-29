@@ -1,6 +1,6 @@
 module "cloudwatch_metric_alarms" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarm"
-  version = "3.1.0"
+  version = "3.2.0"
 
   for_each = {
     for key, val in try(local.aws_vars.cloudwatch, {}) :
