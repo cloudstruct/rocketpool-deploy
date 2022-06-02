@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "eip_attach" {
       variable = "ec2:ResourceTag/Name"
 
       values = [
-        "${local.name_prefix}-node",
+        "${local.name_prefix}-${local.aws_vars.ec2.name}",
       ]
     }
   }
@@ -84,7 +84,7 @@ data "aws_iam_policy_document" "ebs_attach" {
       variable = "ec2:ResourceTag/Name"
 
       values = [
-        "${local.name_prefix}-node",
+        "${local.name_prefix}-${local.aws_vars.ec2.name}",
       ]
     }
   }
@@ -102,7 +102,7 @@ data "aws_iam_policy_document" "ebs_attach" {
 }
 
 resource "aws_iam_role" "node" {
-  name = "${local.name_prefix}-node"
+  name = "${local.name_prefix}-${local.aws_vars.ec2.name}"
 
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 
@@ -133,19 +133,19 @@ resource "aws_iam_role" "node" {
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node"
+      Name = "${local.name_prefix}-${local.aws_vars.ec2.name}"
     },
   )
 }
 
 resource "aws_iam_instance_profile" "node" {
-  name = "${local.name_prefix}-node"
+  name = "${local.name_prefix}-${local.aws_vars.ec2.name}"
   role = aws_iam_role.node.name
 
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node"
+      Name = "${local.name_prefix}-${local.aws_vars.ec2.name}"
     },
   )
 

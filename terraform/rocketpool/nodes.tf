@@ -108,7 +108,7 @@ resource "aws_launch_template" "node" {
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node"
+      Name = "${local.name_prefix}-${local.aws_vars.ec2.name}"
     },
   )
 }
@@ -125,7 +125,7 @@ resource "aws_ebs_volume" "node_data" {
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node"
+      Name = "${local.name_prefix}-${local.aws_vars.ec2.name}"
     },
   )
 }
@@ -153,7 +153,7 @@ resource "aws_autoscaling_group" "node" {
     for_each = merge(
       local.default_tags,
       {
-        Name          = "${local.name_prefix}-node"
+        Name          = "${local.name_prefix}-${local.aws_vars.ec2.name}"
         eth_node_type = "core"
         eth_network   = try(local.node_vars.eth_network, "mainnet")
       },
@@ -176,7 +176,7 @@ resource "aws_eip" "node" {
   tags = merge(
     local.default_tags,
     {
-      Name = "${local.name_prefix}-node"
+      Name = "${local.name_prefix}-${local.aws_vars.ec2.name}"
     },
   )
 
