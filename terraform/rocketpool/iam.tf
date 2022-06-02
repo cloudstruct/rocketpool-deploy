@@ -120,7 +120,7 @@ resource "aws_iam_role" "node" {
   # to make it conditional
   dynamic "inline_policy" {
     for_each = {
-      for key, val in { "node" = local.node_vars.node } :
+      for key, val in { "node" = local.aws_vars.ec2 } :
       key => val if lookup(val, "eip", false)
     }
 

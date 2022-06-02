@@ -5,9 +5,8 @@
 
 version: "3.7"
 services:
-  eth2:
+  eth1:
     x-rp-comment: Add your customizations below this line
     volumes:
-      - {{ eth.secrets.dataDir }}/validators:/validators
       - {{ eth.eth1.dataDir }}:/ethclient
       - {{ rocketpool_user_home }}/.rocketpool/scripts:/setup:ro
