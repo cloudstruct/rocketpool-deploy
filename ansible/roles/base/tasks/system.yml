@@ -36,7 +36,7 @@
   ansible.builtin.user:
     name: "{{ rocketpool.user | default('rp') }}"
     shell: /bin/bash
-    uid: "{{ (rocketpool.uid|default('1001')) if lookup('env', 'CI') != 'true' else omit }}"
+    uid: "{{ ( rocketpool.uid | default('1001') ) if lookup('env', 'CI') != 'true' else omit }}"
 
 - name: System | Add rocketpool user to sudoers
   community.general.sudoers:

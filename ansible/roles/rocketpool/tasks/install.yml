@@ -2,7 +2,7 @@
 - name: Rocketpool Install | Set config execution parameters
   ansible.builtin.set_fact:
     ROCKETPOOL_CLI_CONFIG: "{{ ROCKETPOOL_CLI_CONFIG | default('')
-                             + '--' + option.name + ' ' + (option.value|default('')) + ' '
+                             + '--' + option.name + ' ' + ( option.value | default('') ) + ' '
                            }}"
   loop: "{{ rocketpool.config }}"
   loop_control:

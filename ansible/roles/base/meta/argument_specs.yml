@@ -3,3 +3,4 @@ argument_specs:
   # roles/base/tasks/main.yml entry point
   main:
     short_description: The main entry point for the base role
+    options: {}

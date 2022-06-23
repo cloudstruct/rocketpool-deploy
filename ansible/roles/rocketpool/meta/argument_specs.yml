@@ -3,3 +3,4 @@ argument_specs:
   # roles/rocketpool/tasks/main.yml entry point
   main:
     short_description: The main entry point for the rocketpool role
+    options: {}
