@@ -7,7 +7,7 @@ node:
     # docker-compose release version
     # https://github.com/docker/compose/releases
     compose:
-      version: '2.6.0'
+      version: '2.6.1'
     daemon_options:
       log-driver: 'local'
     # Linux users to give docker daemon permissions to
