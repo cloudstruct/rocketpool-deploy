@@ -35,7 +35,7 @@ resource "local_file" "tar_sh" {
 }
 
 data "external" "tar_sh" {
-  program    = [local_file.tar_sh.filename, "-cvzf", "${path.module}/ansible-${local.rp_vars.rocketpool.version}.tar.gz", "${join(" ", local.bundle_files)}"]
+  program    = [local_file.tar_sh.filename, "-cvzf", "${path.module}/ansible-${local.rp_vars.rocketpool.version}.tar.gz", join(" ", local.bundle_files)]
   depends_on = [data.template_file.tar_sh, local_file.local_update]
 }
 
