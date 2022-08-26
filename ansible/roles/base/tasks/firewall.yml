@@ -22,8 +22,8 @@
     proto: "{{ rule.proto | default(omit) }}"
   loop:
     - {name: 'OpenSSH', comment: "Allow to OpenSSH Port"}
-    - {port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'tcp', comment: "Allow ETH1 Discovery TCP"}
-    - {port: "{{ rocketpool.ports.gethP2pPort }}", proto: 'udp', comment: "Allow ETH1 Discovery UDP"}
+    - {port: "{{ rocketpool.ports.executionCommonP2pPort }}", proto: 'tcp', comment: "Allow ETH1 Discovery TCP"}
+    - {port: "{{ rocketpool.ports.executionCommonP2pPort }}", proto: 'udp', comment: "Allow ETH1 Discovery UDP"}
     - {port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'tcp', comment: "Allow ETH2 Discovery TCP"}
     - {port: "{{ rocketpool.ports.consensusCommonP2pPort }}", proto: 'udp', comment: "Allow ETH2 Discovery UDP"}
     - {port: "{{ prometheus.node_exporter.port }}", proto: 'tcp', comment: "Allow prometheus to scrape node-exporter"}

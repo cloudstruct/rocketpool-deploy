@@ -2,7 +2,7 @@
 - name: Rocketpool Post Install | Check ETH1 port
   ansible.builtin.wait_for:
     host: 0.0.0.0
-    port: "{{ rocketpool.ports.gethP2pPort }}"
+    port: "{{ rocketpool.ports.executionCommonP2pPort }}"
     timeout: 300
     delay: 2
 

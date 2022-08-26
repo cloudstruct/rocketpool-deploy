@@ -2,7 +2,9 @@
 - name: Rocketpool Install | Set config execution parameters
   ansible.builtin.set_fact:
     ROCKETPOOL_CLI_CONFIG: "{{ ROCKETPOOL_CLI_CONFIG | default('')
-                             + '--' + option.name + ' ' + ( option.value | default('') ) + ' '
+                             + '--' + option.name
+                             + (' ' if option.value != 'false' else '=')
+                             + (option.value | default('')) + ' '
                            }}"
   loop: "{{ rocketpool.config }}"
   loop_control:
@@ -15,13 +17,23 @@
       - "Executing config command:"
       - "{{ rocketpool_bin }} service config {{ ROCKETPOOL_CLI_CONFIG }}"
 
-- name: Rocketpool Install | Create rocketpool directory
+- name: Rocketpool Install | Create rocketpool directories
+  become: true
   ansible.builtin.file:
     state: directory
-    path: "{{ rocketpool_user_home }}/.rocketpool"
-    owner: "{{ rocketpool.user | default('rp') }}"
-    group: "{{ rocketpool.user | default('rp') }}"
+    path: "{{ dir.path }}"
+    owner: "{{ dir.owner }}"
+    group: "{{ dir.group }}"
     mode: 0700
+  loop:
+    - { path: "{{ rocketpool_user_home }}/.rocketpool", owner: "{{ rocketpool.user | default('rp') }}", group: "{{ rocketpool.user | default('rp') }}" }
+    - { path: "{{ eth.secrets.dataDir }}", owner: "{{ rocketpool.user | default('rp') }}", group: "{{ rocketpool.user | default('rp') }}" }
+    - { path: "{{ eth.eth1.dataDir }}", owner: 'root', group: 'root' }
+    - { path: "{{ eth.eth2.dataDir }}", owner: 'root', group: 'root' }
+    - { path: "{{ grafana.dataDir }}", owner: "{{ rocketpool.user | default('rp') }}", group: "{{ rocketpool.user | default('rp') }}" }
+  loop_control:
+    loop_var: dir
+    label: "{{ dir.path }}"
 
 - name: Rocketpool Install | Execute rocketpool service config command
   become: true
@@ -51,7 +63,7 @@
 - name: Rocketpool Install | Execute rocketpool service install command
   become: true
   become_user: "{{ rocketpool.user | default('rp') }}"
-  ansible.builtin.command: "{{ rocketpool_bin }} service install -y --no-deps --version {{ rocketpool_version }}"
+  ansible.builtin.command: "{{ rocketpool_bin }} service install -y --no-deps --version {{ rocketpool_version }} --verbose"
   args:
     chdir: "{{ rocketpool_user_home }}/.rocketpool"
   vars:

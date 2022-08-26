@@ -5,41 +5,47 @@ rocketpool:
   # user: 'rp'  # Optional: Defaults to 'rp'
   # uid: '1001' # Optional: Defaults to '1001'
   ports:
-    beaconNodeMetrics: 9100
-    validatorClientMetrics: 9101
-    nodeMetrics: 9102
-    watchTowerMetrics: 9104
-    fallbackExecutionCommonHttpPort: 8545
-    fallbackExecutionCommonWsPort: 8546
+    beaconNodeMetricsPort: 9100
     consensusCommonP2pPort: 9001
     consensusCommonApiPort: 5052
-    prysmRpcPort: 5053
+    executionClientMetricsPort: 9105
+    executionCommonEnginePort: 8551
     executionCommonHttpPort: 8545
+    executionCommonP2pPort: 30303
     executionCommonWsPort: 8546
-    gethP2pPort: 30303
+    mevBoostPort: 18550
+    nodeMetricsPort: 9102
+    prysmRpcPort: 5053
+    validatorClientMetricsPort: 9101
+    watchTowerMetricsPort: 9104
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.4.3'
+  version: 'v1.5.1'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
     # - { name: 'executionClientMode', value: '' }
     # - { name: 'executionClient', value: '' }
-    # - { name: 'useFallbackExecutionClient' }
-    # - { name: 'fallbackExecutionClientMode', value: '' }
-    # - { name: 'fallbackExecutionClient', value: '' }
+    # - { name: 'useFallbackClients', value: 'false' }
+    # - { name: 'fallbackNormal-ecHttpUrl', value: '' }
+    # - { name: 'fallbackNormal-ccHttpUrl', value: '' }
+    # - { name: 'fallbackPrysm-ecHttpUrl', value: '' }
+    # - { name: 'fallbackPrysm-ccHttpUrl', value: '' }
+    # - { name: 'fallbackPrysm-jsonRpcUrl', value: '' }
     # - { name: 'reconnectDelay', value: '' }
     # - { name: 'consensusClientMode', value: '' }
     # - { name: 'consensusClient', value: '' }
     # - { name: 'externalConsensusClient', value: '' }
-    # - { name: 'enableMetrics' }
-    # - { name: 'bnMetricsPort', value: "{{ rocketpool.ports.beaconNodeMetrics }}" }
-    # - { name: 'vcMetricsPort', value: "{{ rocketpool.ports.validatorClientMetrics }}" }
-    # - { name: 'nodeMetricsPort', value: "{{ rocketpool.ports.nodeMetrics }}" }
+    # - { name: 'enableMetrics', value: 'false' }
+    # - { name: 'enableBitflyNodeMetrics', value: 'false' }
+    # - { name: 'bitflyNodeMetrics-secret', value: '' }
+    # - { name: 'bitflyNodeMetrics-endpoint', value: 'https://beaconcha.in/api/v1/client/metrics' }
+    # - { name: 'bitflyNodeMetrics-machineName', value: 'Smartnode' }
+    # - { name: 'ecMetricsPort', value: "{{ rocketpool.ports.executionClientMetricsPort }}" }
+    # - { name: 'bnMetricsPort', value: "{{ rocketpool.ports.beaconNodeMetricsPort }}" }
+    # - { name: 'vcMetricsPort', value: "{{ rocketpool.ports.validatorClientMetricsPort }}" }
+    # - { name: 'nodeMetricsPort', value: "{{ rocketpool.ports.nodeMetricsPort }}" }
     # - { name: 'exporterMetricsPort', value: "{{ prometheus.node_exporter.port }}" }
-    # - { name: 'watchtowerMetricsPort', value: "{{ rocketpool.ports.watchTowerMetrics }}" }
-    # - { name: 'fallbackPocket-gatewayID', value: '' }
-    # - { name: 'fallbackPocket-containerTag', value: '' }
-    # - { name: 'fallbackPocket-additionalFlags', value: '' }
+    # - { name: 'watchtowerMetricsPort', value: "{{ rocketpool.ports.watchTowerMetricsPort }}" }
     # - { name: 'lighthouse-maxPeers', value: '' }
     # - { name: 'lighthouse-containerTag', value: '' }
     # - { name: 'lighthouse-additionalBnFlags', value: '' }
@@ -48,9 +54,7 @@ rocketpool:
     # - { name: 'native-consensusClient', value: '' }
     # - { name: 'native-ccHttpUrl', value: '' }
     # - { name: 'native-validatorRestartCommand', value: '' }
-    # - { name: 'pocket-gatewayID', value: '' }
-    # - { name: 'pocket-containerTag', value: '' }
-    # - { name: 'pocket-additionalFlags', value: '' }
+    # - { name: 'native-validatorStopCommand', 'stop-validator.sh' }
     # - { name: 'consensusCommon-graffiti', value: '' }
     # - { name: 'consensusCommon-checkpointSyncUrl', value: '' }
     # - { name: 'consensusCommon-p2pPort', value: "{{ rocketpool.ports.consensusCommonP2pPort }}" }
@@ -77,34 +81,43 @@ rocketpool:
     # - { name: 'teku-containerTag', value: '' }
     # - { name: 'teku-additionalBnFlags', value: '' }
     # - { name: 'teku-additionalVcFlags', value: '' }
+    # - { name: 'smartnode-archiveECUrl', value: '' }
     # - { name: 'smartnode-network', value: '' }
     # - { name: 'smartnode-projectName', value: '' }
     - { name: 'smartnode-dataPath', value: "{{ eth.secrets.dataDir }}" }
     # - { name: 'smartnode-manualMaxFee', value: '' }
     # - { name: 'smartnode-priorityFee', value: '' }
     # - { name: 'smartnode-rplClaimGasThreshold', value: '' }
+    # - { name: 'smartnode-rewardsTreeMode', value: 'download' }
     # - { name: 'smartnode-minipoolStakeGasThreshold', value: '' }
+    # - { name: 'smartnode-watchtowerPath', value: "{{ rocketpool_user_home }}/.rocketpool/watchtower }}" }
+    # - { name: 'smartnode-web3StorageApiToken', value: "" }
+    # - { name: 'executionCommon-enginePort', value: "{{ rocketpool.ports.executionCommonEnginePort }}" }
     # - { name: 'executionCommon-httpPort', value: "{{ rocketpool.ports.executionCommonHttpPort }}" }
+    # - { name: 'executionCommon-p2pPort', value: "{{ rocketpool.ports.executionCommonP2pPort }}" }
     # - { name: 'executionCommon-wsPort', value: "{{ rocketpool.ports.executionCommonWsPort }}" }
     # - { name: 'executionCommon-openRpcPorts' }
-    # - { name: 'geth-cache', value: '' }
-    # - { name: 'geth-maxPeers', value: '' }
-    # - { name: 'geth-p2pPort', value: "{{ rocketpool.ports.gethP2pPort }}" }
-    # - { name: 'geth-ethstatsLabel', value: '' }
-    # - { name: 'geth-ethstatsLogin', value: '' }
+    # - { name: 'besu-containerTag', value: '' }
+    # - { name: 'besu-jvmHeapSize', value: '0' }
+    # - { name: 'besu-maxPeers', value: '25' }
+    # - { name: 'besu-maxBackLayers', value: '512' }
+    # - { name: 'geth-cache', value: '4096' }
+    # - { name: 'geth-maxPeers', value: '25' }
     # - { name: 'geth-containerTag', value: '' }
     # - { name: 'geth-additionalFlags', value: '' }
-    # - { name: 'infura-projectID', value: '' }
-    # - { name: 'infura-containerTag', value: '' }
-    # - { name: 'infura-additionalFlags', value: '' }
     # - { name: 'externalExecution-httpUrl', value: '' }
     # - { name: 'externalExecution-wsUrl', value: '' }
-    # - { name: 'fallbackExecutionCommon-httpPort', value: "{{ rocketpool.ports.fallbackExecutionCommonHttpPort }}" }
-    # - { name: 'fallbackExecutionCommon-wsPort', value: "{{ rocketpool.ports.fallbackExecutionCommonWsPort }}" }
-    # - { name: 'fallbackExecutionCommon-openRpcPorts' }
+    # - { name: 'nethermind-cache', value: '2048' }
+    # - { name: 'nethermind-containerTag', value: '' }
+    # - { name: 'nethermind-maxPeers', value: '25' }
+    # - { name: 'nethermind-pruneMemSize', value: '2048' }
+    # - { name: 'nethermind-additionalFlags', value: '' }
     # - { name: 'nimbus-maxPeers', value: '' }
     # - { name: 'nimbus-containerTag', value: '' }
     # - { name: 'nimbus-additionalFlags', value: '' }
+    # - { name: 'teku-containerTag', value: '' }
+    # - { name: 'teku-jvmHeapSize', value: '0' }
+    # - { name: 'teku-maxPeers', value: '100' }
     # - { name: 'externalPrysm-httpUrl', value: '' }
     # - { name: 'externalPrysm-jsonRpcUrl', value: '' }
     # - { name: 'externalPrysm-graffiti', value: '' }
@@ -115,24 +128,25 @@ rocketpool:
     # - { name: 'prometheus-openPort' }
     - { name: 'prometheus-containerTag', value: "{{ prometheus.version }}" }
     # - { name: 'prometheus-additionalFlags', value: '' }
-    # - { name: 'fallbackInfura-projectID', value: '' }
-    # - { name: 'fallbackInfura-containerTag', value: '' }
-    # - { name: 'fallbackInfura-additionalFlags', value: '' }
-    # - { name: 'fallbackExternalExecution-httpUrl', value: '' }
-    # - { name: 'fallbackExternalExecution-wsUrl', value: '' }
     # - { name: 'externalTeku-httpUrl', value: '' }
     # - { name: 'externalTeku-graffiti', value: '' }
     # - { name: 'externalTeku-containerTag', value: '' }
     # - { name: 'externalTeku-additionalVcFlags', value: '' }
     # - { name: 'grafana-port', value: "{{ grafana.port }}" }
     - { name: 'grafana-containerTag', value: "{{ grafana.version }}" }
+    # - { name: 'mevBoost-mode', value: 'local' }
+    # - { name: 'mevBoost-port', value: "{{ rocketpool.ports.mevBoostPort }}" }
+    # - { name: 'mevBoost-relays', value: '' }
+    # - { name: 'mevBoost-containerTag', value: '' }
+    # - { name: 'mevBoost-additionalFlags', value: '' }
+    # - { name: 'mevBoost-externalUrl', value: '' }
 
 grafana:
   # Where to store grafana persistent data (/data is EBS volume mount location)
   dataDir: '/data/grafana'
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '9.0.2'
+  version: '9.1.1'
 
 eth:
   network: 'mainnet'
@@ -145,7 +159,7 @@ eth:
 
 prometheus:
   # https://github.com/prometheus/prometheus/releases
-  version: 'v2.36.2'
+  version: 'v2.38.0'
   # Where to store Prometheus persistent data. (/data is EBS volume mount location)
   dataDir: '/data/prometheus'
   port: 9091
