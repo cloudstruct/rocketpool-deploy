@@ -19,7 +19,7 @@ rocketpool:
     validatorClientMetricsPort: 9101
     watchTowerMetricsPort: 9104
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.5.1'
+  version: 'v1.6.0'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
@@ -90,6 +90,7 @@ rocketpool:
     # - { name: 'smartnode-rplClaimGasThreshold', value: '' }
     # - { name: 'smartnode-rewardsTreeMode', value: 'download' }
     # - { name: 'smartnode-minipoolStakeGasThreshold', value: '' }
+    # - { name: 'smartnode-ttd', value: '' }
     # - { name: 'smartnode-watchtowerPath', value: "{{ rocketpool_user_home }}/.rocketpool/watchtower }}" }
     # - { name: 'smartnode-web3StorageApiToken', value: "" }
     # - { name: 'executionCommon-enginePort', value: "{{ rocketpool.ports.executionCommonEnginePort }}" }
@@ -134,12 +135,19 @@ rocketpool:
     # - { name: 'externalTeku-additionalVcFlags', value: '' }
     # - { name: 'grafana-port', value: "{{ grafana.port }}" }
     - { name: 'grafana-containerTag', value: "{{ grafana.version }}" }
+    # - { name: 'enableMevBoost', value: 'false' }
     # - { name: 'mevBoost-mode', value: 'local' }
     # - { name: 'mevBoost-port', value: "{{ rocketpool.ports.mevBoostPort }}" }
     # - { name: 'mevBoost-relays', value: '' }
     # - { name: 'mevBoost-containerTag', value: '' }
     # - { name: 'mevBoost-additionalFlags', value: '' }
     # - { name: 'mevBoost-externalUrl', value: '' }
+    # - { name: 'addons-gww-enabled', value: 'false' }
+    # - { name: 'addons-gww-inputUrl', value: '' }
+    # - { name: 'addons-gww-updateWallTime', value: '600' }
+    # - { name: 'addons-gww-updatePixelTime', value: '60' }
+    # - { name: 'addons-gww-containerTag', value: '' }
+    # - { name: 'addons-gww-additionalFlags', value: '' }
 
 grafana:
   # Where to store grafana persistent data (/data is EBS volume mount location)
