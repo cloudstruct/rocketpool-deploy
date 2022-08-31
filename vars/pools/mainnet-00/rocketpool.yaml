@@ -19,7 +19,7 @@ rocketpool:
     validatorClientMetricsPort: 9101
     watchTowerMetricsPort: 9104
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.6.0'
+  version: 'v1.6.1'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
@@ -87,7 +87,6 @@ rocketpool:
     - { name: 'smartnode-dataPath', value: "{{ eth.secrets.dataDir }}" }
     # - { name: 'smartnode-manualMaxFee', value: '' }
     # - { name: 'smartnode-priorityFee', value: '' }
-    # - { name: 'smartnode-rplClaimGasThreshold', value: '' }
     # - { name: 'smartnode-rewardsTreeMode', value: 'download' }
     # - { name: 'smartnode-minipoolStakeGasThreshold', value: '' }
     # - { name: 'smartnode-ttd', value: '' }
@@ -119,6 +118,7 @@ rocketpool:
     # - { name: 'teku-containerTag', value: '' }
     # - { name: 'teku-jvmHeapSize', value: '0' }
     # - { name: 'teku-maxPeers', value: '100' }
+    # - { name: 'teku-archiveMode', value: 'true' }
     # - { name: 'externalPrysm-httpUrl', value: '' }
     # - { name: 'externalPrysm-jsonRpcUrl', value: '' }
     # - { name: 'externalPrysm-graffiti', value: '' }
@@ -154,7 +154,7 @@ grafana:
   dataDir: '/data/grafana'
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '9.1.1'
+  version: '9.1.2'
 
 eth:
   network: 'mainnet'
