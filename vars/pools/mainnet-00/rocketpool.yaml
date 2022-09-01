@@ -19,7 +19,7 @@ rocketpool:
     validatorClientMetricsPort: 9101
     watchTowerMetricsPort: 9104
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.6.1'
+  version: 'v1.6.2'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
@@ -148,6 +148,7 @@ rocketpool:
     # - { name: 'addons-gww-updatePixelTime', value: '60' }
     # - { name: 'addons-gww-containerTag', value: '' }
     # - { name: 'addons-gww-additionalFlags', value: '' }
+    # - { name: 'enableODaoMetrics', value: 'false' }
 
 grafana:
   # Where to store grafana persistent data (/data is EBS volume mount location)
