@@ -45,6 +45,10 @@ jobs:
           pip install -r ${GITHUB_WORKSPACE}/requirements_dev.txt
         if: steps.cache-python.outputs.cache-hit != 'true'
 
+      - name: Lint Ansible Playbook
+        id: ansible-lint
+        run: ansible-lint --exclude ~/.ansible site.yml
+
       - uses: actions/cache@v2
         name: Cache dir
         id: cache-ansible
@@ -55,10 +59,6 @@ jobs:
       - name: Install Ansible-Galaxy dependencies
         id: ansible-galaxy-install
         run: ansible-galaxy install -r requirements.yml
-
-      - name: Lint Ansible Playbook
-        id: ansible-lint
-        run: ansible-lint -vv --exclude ~/.ansible site.yml
 
       - name: Run playbook
         id: ansible-playbook

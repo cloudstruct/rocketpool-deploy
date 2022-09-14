@@ -3,7 +3,7 @@
   ansible.builtin.set_fact:
     ROCKETPOOL_CLI_CONFIG: "{{ ROCKETPOOL_CLI_CONFIG | default('')
                              + '--' + option.name
-                             + (' ' if (option.value|default('')) != 'false' else '=')
+                             + (' ' if (option.value | default('')) != 'false' else '=')
                              + (option.value | default('')) + ' '
                            }}"
   loop: "{{ rocketpool.config }}"

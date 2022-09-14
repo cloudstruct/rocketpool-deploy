@@ -19,7 +19,7 @@ rocketpool:
     validatorClientMetricsPort: 9101
     watchTowerMetricsPort: 9104
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.6.2'
+  version: 'v1.6.3'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
@@ -138,10 +138,14 @@ rocketpool:
     # - { name: 'enableMevBoost', value: 'false' }
     # - { name: 'mevBoost-mode', value: 'local' }
     # - { name: 'mevBoost-port', value: "{{ rocketpool.ports.mevBoostPort }}" }
-    # - { name: 'mevBoost-relays', value: '' }
     # - { name: 'mevBoost-containerTag', value: '' }
     # - { name: 'mevBoost-additionalFlags', value: '' }
     # - { name: 'mevBoost-externalUrl', value: '' }
+    # - { name: 'mevBoost-flashbotsEnabled', value: '' }
+    # - { name: 'mevBoost-bloxRouteEthicalEnabled', value '' }
+    # - { name: 'mevBoost-bloxRouteMaxProfitEnabled', value '' }
+    # - { name: 'mevBoost-bloxRouteRegulatedEnabled', value '' }
+    # - { name: 'mevBoost-openRpcPort', value '' }
     # - { name: 'addons-gww-enabled', value: 'false' }
     # - { name: 'addons-gww-inputUrl', value: '' }
     # - { name: 'addons-gww-updateWallTime', value: '600' }
@@ -155,7 +159,7 @@ grafana:
   dataDir: '/data/grafana'
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '9.1.2'
+  version: '9.1.5'
 
 eth:
   network: 'mainnet'
