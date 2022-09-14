@@ -1,3 +1,6 @@
 ---
-- import_playbook: setup-system.yml
-- import_playbook: setup-rocketpool.yml
+- name: Import setup-system playbook
+  import_playbook: setup-system.yml
+
+- name: Import setup-rocketpool playbook
+  import_playbook: setup-rocketpool.yml
