@@ -13,26 +13,16 @@
     timeout: 300
     delay: 2
 
-- name: Rocketpool Post Install | Check prometheus port if exposed
-  ansible.builtin.wait_for:
-    host: 0.0.0.0
-    port: "{{ prometheus.port }}"
-    timeout: 300
-    delay: 2
-  when: configOpt.name == 'prometheus-openPort'
-  loop: "{{ rocketpool.config }}"
-  loop_control:
-    label: "{{ configOpt.name }}"
-    loop_var: 'configOpt'
-
 - name: Rocketpool Post Install | Check metrics ports
   ansible.builtin.wait_for:
     host: 0.0.0.0
     port: "{{ metrics_port }}"
     timeout: 300
     delay: 2
+  when: (rocketpool.config | selectattr('name', 'equalto', 'enableMetrics') | selectattr('value', 'in', ('false', 'False', 'FALSE')) | list | count) < 1
   loop:
     - "{{ grafana.port }}"
     - "{{ prometheus.node_exporter.port }}"
+    - "{{ prometheus.port }}"
   loop_control:
     loop_var: 'metrics_port'

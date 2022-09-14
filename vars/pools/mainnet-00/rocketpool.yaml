@@ -142,10 +142,10 @@ rocketpool:
     # - { name: 'mevBoost-additionalFlags', value: '' }
     # - { name: 'mevBoost-externalUrl', value: '' }
     # - { name: 'mevBoost-flashbotsEnabled', value: '' }
-    # - { name: 'mevBoost-bloxRouteEthicalEnabled', value '' }
-    # - { name: 'mevBoost-bloxRouteMaxProfitEnabled', value '' }
-    # - { name: 'mevBoost-bloxRouteRegulatedEnabled', value '' }
-    # - { name: 'mevBoost-openRpcPort', value '' }
+    # - { name: 'mevBoost-bloxRouteEthicalEnabled', value: '' }
+    # - { name: 'mevBoost-bloxRouteMaxProfitEnabled', value: '' }
+    # - { name: 'mevBoost-bloxRouteRegulatedEnabled', value: '' }
+    # - { name: 'mevBoost-openRpcPort', value: '' }
     # - { name: 'addons-gww-enabled', value: 'false' }
     # - { name: 'addons-gww-inputUrl', value: '' }
     # - { name: 'addons-gww-updateWallTime', value: '600' }
