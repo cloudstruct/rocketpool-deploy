@@ -19,7 +19,7 @@ rocketpool:
     validatorClientMetricsPort: 9101
     watchTowerMetricsPort: 9104
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.6.3'
+  version: 'v1.6.4'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
@@ -89,7 +89,6 @@ rocketpool:
     # - { name: 'smartnode-priorityFee', value: '' }
     # - { name: 'smartnode-rewardsTreeMode', value: 'download' }
     # - { name: 'smartnode-minipoolStakeGasThreshold', value: '' }
-    # - { name: 'smartnode-ttd', value: '' }
     # - { name: 'smartnode-watchtowerPath', value: "{{ rocketpool_user_home }}/.rocketpool/watchtower }}" }
     # - { name: 'smartnode-web3StorageApiToken', value: "" }
     # - { name: 'executionCommon-enginePort', value: "{{ rocketpool.ports.executionCommonEnginePort }}" }
@@ -145,6 +144,8 @@ rocketpool:
     # - { name: 'mevBoost-bloxRouteEthicalEnabled', value: '' }
     # - { name: 'mevBoost-bloxRouteMaxProfitEnabled', value: '' }
     # - { name: 'mevBoost-bloxRouteRegulatedEnabled', value: '' }
+    # - { name: 'mevBoost-blocknativeEnabled', value: '' }
+    # - { name: 'mevBoost-edenEnabled', value: '' }
     # - { name: 'mevBoost-openRpcPort', value: '' }
     # - { name: 'addons-gww-enabled', value: 'false' }
     # - { name: 'addons-gww-inputUrl', value: '' }
