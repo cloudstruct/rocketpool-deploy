@@ -23,6 +23,15 @@
   loop:
     - "{{ grafana.port }}"
     - "{{ prometheus.node_exporter.port }}"
-    - "{{ prometheus.port }}"
   loop_control:
     loop_var: 'metrics_port'
+
+- name: Rocketpool Post Install | Check Prometheus ports
+  ansible.builtin.wait_for:
+    host: 0.0.0.0
+    port: "{{ prometheus.port }}"
+    timeout: 300
+    delay: 2
+  when:
+    - (rocketpool.config | selectattr('name', 'equalto', 'enableMetrics') | selectattr('value', 'in', ('false', 'False', 'FALSE')) | list | count) < 1
+    - (rocketpool.config | selectattr('name', 'equalto', 'prometheus-openPort') | selectattr('value', 'in', ('true', 'True', 'TRUE')) | list | count ) > 0
