@@ -45,7 +45,7 @@ resource "aws_key_pair" "common" {
 }
 
 # Cloud-init config template
-data "template_cloudinit_config" "node" {
+data "cloudinit_config" "node" {
   gzip = false
 
   part {
@@ -81,7 +81,7 @@ resource "aws_launch_template" "node" {
 
   update_default_version = true
 
-  user_data = data.template_cloudinit_config.node.rendered
+  user_data = data.cloudinit_config.node.rendered
 
   disable_api_termination = true
 

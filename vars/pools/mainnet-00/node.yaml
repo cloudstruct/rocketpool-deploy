@@ -4,10 +4,6 @@ node:
   # unattended_automatic_reboot_time: "02:00"   # Optional: defaults to 2AM system time
   # unattended_remove_unused_dependencies: true # Optional: defaults to true
   docker:
-    # docker-compose release version
-    # https://github.com/docker/compose/releases
-    compose:
-      version: '2.6.1'
     daemon_options:
       log-driver: 'local'
     # Linux users to give docker daemon permissions to

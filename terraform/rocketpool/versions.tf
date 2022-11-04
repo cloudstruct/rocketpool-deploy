@@ -33,8 +33,8 @@ terraform {
       source  = "hashicorp/local"
       version = "~> 2.0"
     }
-    template = {
-      source  = "hashicorp/template"
+    cloudinit = {
+      source  = "hashicorp/cloudinit"
       version = "~> 2.0"
     }
   }

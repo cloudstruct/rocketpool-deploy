@@ -70,7 +70,10 @@
         name: geerlingguy.docker
       vars:
         docker_apt_arch: "{{ rocketpool_arch }}"
-        docker_compose_arch: "{{ ansible_architecture }}"
-        docker_compose_version: "v{{ node.docker.compose.version | default(node.docker.compose.version) }}"
         docker_users: "{{ node.docker.users | default(node.docker.users) | default(['rp']) }}"
         docker_daemon_options: "{{ node.docker.daemon_options }}"
+
+    - name: Playbook | Install docker-compose-plugin
+      ansible.builtin.package:
+        state: present
+        name: docker-compose-plugin
