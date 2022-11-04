@@ -21,7 +21,7 @@
 Automation to deploy/manage a Rocketpool Ethereum staking pool node
 
 ### Why?
-You may be asking why does this repo exist?  Rocketpool already has a fantastic install guide, docker containers, docker-compose setup, etc.
+You may be asking why does this repo exist?  Rocketpool already has a fantastic install guide, docker containers, etc.
 The reasons someone might want to use this repo are:
 * Production level deployment (Things like uptime, self-healing, monitoring, notifications for monitoring, and repeatability)
 * You do not want to put the effort in to doing it manually.

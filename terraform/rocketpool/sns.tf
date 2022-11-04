@@ -1,7 +1,7 @@
 module "notify_slack" {
   count   = try(length(keys(local.aws_vars.sns)), 0) > 0 ? 1 : 0
   source  = "terraform-aws-modules/notify-slack/aws"
-  version = "5.3.0"
+  version = "5.4.0"
 
   lambda_function_name = "cloudstruct_rocketpool_${local.pool}_notify_slack"
   sns_topic_name       = try(local.aws_vars.sns.slack.topic_name, null)

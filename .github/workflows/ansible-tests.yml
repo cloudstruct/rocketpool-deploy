@@ -62,4 +62,4 @@ jobs:
 
       - name: Run playbook
         id: ansible-playbook
-        run: ansible-playbook site.yml -e "POOL=mainnet-00" --skip-tags 'skipci' -vvv
+        run: ansible-playbook site.yml -e "POOL=mainnet-00" --skip-tags 'skipci' 

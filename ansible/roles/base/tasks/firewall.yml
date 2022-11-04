@@ -35,7 +35,7 @@
   when: node.ufw.enabled | default(True)
 
 - name: Base-Firewall | Add fail2ban sshd configuration
-  ini_file:
+  community.general.ini_file:
     path: /etc/fail2ban/jail.d/ssh.conf
     section: "sshd"
     option: "{{ ssh_config.option }}"

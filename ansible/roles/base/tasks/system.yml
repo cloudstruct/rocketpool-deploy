@@ -24,7 +24,7 @@
   tags: ['skipci']
 
 - name: System | Secure shared memory
-  ansible.builtin.mount:
+  ansible.posix.mount:
     src: none
     path: /run/shm
     fstype: tmpfs

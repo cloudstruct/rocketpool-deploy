@@ -11,7 +11,7 @@
     - rocketpool_arch is not defined or rocketpool_version is not defined
   tags: ['always']
 
-- name: "Rocketpool Main | Download rocketpool binary '{{ rocketpool_version }}'"
+- name: "Rocketpool Main | Download rocketpool binary {{ rocketpool_version }}"
   ansible.builtin.get_url:
     url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool_version }}/rocketpool-cli-linux-{{ rocketpool_arch }}"
     dest: '/usr/local/bin/rocketpool'
@@ -20,7 +20,7 @@
     group: 'root'
 
 - name: Main | Include rocketpool install tasks
-  include_tasks: install.yml
+  ansible.builtin.include_tasks: install.yml
 
 - name: Main | Include rocketpool post install tasks
-  include_tasks: post_install.yml
+  ansible.builtin.include_tasks: post_install.yml
