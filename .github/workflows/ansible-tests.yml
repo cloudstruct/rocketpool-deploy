@@ -47,7 +47,7 @@ jobs:
 
       - name: Lint Ansible Playbook
         id: ansible-lint
-        run: ansible-lint --exclude ~/.ansible site.yml
+        run: ansible-lint -c .ansible-lint --exclude ~/.ansible site.yml
 
       - uses: actions/cache@v2
         name: Cache dir
