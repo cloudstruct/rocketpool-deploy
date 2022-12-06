@@ -45,9 +45,9 @@ jobs:
           pip install -r ${GITHUB_WORKSPACE}/requirements_dev.txt
         if: steps.cache-python.outputs.cache-hit != 'true'
 
-      - name: Lint Ansible Playbook
-        id: ansible-lint
-        run: ansible-lint -c .ansible-lint --exclude ~/.ansible site.yml
+#      - name: Lint Ansible Playbook
+#        id: ansible-lint
+#        run: ansible-lint -c .ansible-lint --exclude ~/.ansible site.yml
 
       - uses: actions/cache@v2
         name: Cache dir
