@@ -19,7 +19,7 @@ rocketpool:
     validatorClientMetricsPort: 9101
     watchTowerMetricsPort: 9104
   # https://github.com/rocket-pool/smartnode-install/releases
-  version: 'v1.7.0'
+  version: 'v1.7.1'
   config:
     # Uncomment and fill in the options you require
     # See 'rocketpool service config --help' for a list of all possible parameter input values and defaults
@@ -111,6 +111,8 @@ rocketpool:
     # - { name: 'nethermind-maxPeers', value: '25' }
     # - { name: 'nethermind-pruneMemSize', value: '2048' }
     # - { name: 'nethermind-additionalFlags', value: '' }
+    # - { name: 'nethermind-additionalModules', value: 'Eth,Net,Personal,Web3' }
+    # - { name: 'nethermind-additionalUrls', value: '' }
     # - { name: 'nimbus-maxPeers', value: '' }
     # - { name: 'nimbus-containerTag', value: '' }
     # - { name: 'nimbus-additionalFlags', value: '' }
@@ -163,7 +165,7 @@ grafana:
   dataDir: '/data/grafana'
   port: 3100
   # https://grafana.com/docs/grafana/latest/release-notes/
-  version: '9.2.3'
+  version: '9.3.1'
 
 eth:
   network: 'mainnet'
@@ -176,7 +178,7 @@ eth:
 
 prometheus:
   # https://github.com/prometheus/prometheus/releases
-  version: 'v2.39.1'
+  version: 'v2.40.5'
   # Where to store Prometheus persistent data. (/data is EBS volume mount location)
   dataDir: '/data/prometheus'
   port: 9091
@@ -184,4 +186,4 @@ prometheus:
   node_exporter:
     port: 9103
     # https://github.com/prometheus/node_exporter/releases
-    version: 'v1.4.0'
+    version: 'v1.5.0'
